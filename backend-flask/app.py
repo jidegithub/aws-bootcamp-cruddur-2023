@@ -22,10 +22,19 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
+# RollBar
+import rollbar
+import rollbar.contrib.flask
+from flask import got_request_exception
+
 # Initialize tracing and an exporter that can send data to Honeycomb
 provider = TracerProvider()
 processor = BatchSpanProcessor(OTLPSpanExporter())
 provider.add_span_processor(processor)
+
+# Show this in the logs within the backend-flask app (STDOUT)
+#simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
+#provider.add_span_processor(simple_processor)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
 
@@ -34,12 +43,19 @@ app = Flask(__name__)
 # HoneyComb
 # Initialize automatic instrumentation with Flask
 FlaskInstrumentor().instrument_app(app)
-RequestsInstrumentor().instrument() 
+RequestsInstrumentor().instrument()
 
-# RollBar
-import rollbar
-import rollbar.contrib.flask
-from flask import got_request_exception
+
+frontend = os.getenv('FRONTEND_URL')
+backend = os.getenv('BACKEND_URL')
+origins = [frontend, backend]
+cors = CORS(
+  app, 
+  resources={r"/api/*": {"origins": origins}},
+  expose_headers="location,link",
+  allow_headers="content-type,if-modified-since",
+  methods="OPTIONS,GET,HEAD,POST"
+)
 
 # RollBar init
 rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
@@ -58,17 +74,6 @@ def init_rollbar():
 
     # send exceptions from `app` to rollbar, using flask's signal system.
     got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
-
-frontend = os.getenv('FRONTEND_URL')
-backend = os.getenv('BACKEND_URL')
-origins = [frontend, backend]
-cors = CORS(
-  app, 
-  resources={r"/api/*": {"origins": origins}},
-  expose_headers="location,link",
-  allow_headers="content-type,if-modified-since",
-  methods="OPTIONS,GET,HEAD,POST"
-)
 
 @app.route('/rollbar/test')
 def rollbar_test():
