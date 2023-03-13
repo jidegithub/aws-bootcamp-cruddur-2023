@@ -24,12 +24,12 @@ export default function SigninPage() {
           if (err.code == 'NotAuthorizedException') {
             setErrors(err.message)
           }
+          else if (err.code == 'UserNotConfirmedException') {
+            window.location.href = "/confirm"
+          }
           setErrors(err.message)
         });
     } catch (error) {
-      if (error.code == 'UserNotConfirmedException') {
-        window.location.href = "/confirm"
-      }
       setErrors(error.message)
     }
     return false
