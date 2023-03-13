@@ -20,6 +20,10 @@ services:
       - "4567:4567"
     volumes:
       - ./backend-flask:/backend-flask
+  sidecar:
+    image: busybox
+    depends_on:
+      - "backend-flask"
   frontend-react-js:
     environment:
       REACT_APP_BACKEND_URL: "${REACT_APP_BACKEND_URL}"
