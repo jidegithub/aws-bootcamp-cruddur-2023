@@ -1,21 +1,19 @@
-import time
-import requests
+from werkzeug.wrappers import Request, Response
+from flask import request, abort
 from jose import jwk, jwt
+from functools import wraps
 from jose.exceptions import JOSEError
 from jose.utils import base64url_decode
+import requests
+import time
+import os
+import sys
 
 class FlaskAWSCognitoError(Exception):
   pass
 
 class TokenVerifyError(Exception):
   pass
-
-def extract_access_token(request_headers):
-    access_token = None
-    auth_header = request_headers.get("Authorization")
-    if auth_header and " " in auth_header:
-        _, access_token = auth_header.split()
-    return access_token
 
 class CognitoJwtToken:
     def __init__(self, user_pool_id, user_pool_client_id, region, request_client=None):
@@ -97,6 +95,14 @@ class CognitoJwtToken:
         if audience != self.user_pool_client_id:
             raise TokenVerifyError("Token was not issued for this audience")
 
+    @staticmethod
+    def extract_access_token(request_headers):
+        access_token = None
+        auth_header = request_headers.get("Authorization")
+        if auth_header and " " in auth_header:
+            _, access_token = auth_header.split()
+        return access_token
+
     def verify(self, token, current_time=None):
         """ https://github.com/awslabs/aws-support-tools/blob/master/Cognito/decode-verify-jwt/decode-verify-jwt.py """
         if not token:
@@ -112,3 +118,26 @@ class CognitoJwtToken:
 
         self.claims = claims 
         return claims
+
+cognito_jwt_token = CognitoJwtToken(
+  user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"), 
+  user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
+  region=os.getenv("AWS_DEFAULT_REGION")
+)
+
+def CognitoJwtTokenMiddleware(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        claims = None
+        if "Authorization" in request.headers:
+            token = request.headers["Authorization"].split(" ")[1]
+        try:
+            access_token = cognito_jwt_token.extract_access_token(request.headers)
+            claims = cognito_jwt_token.verify(access_token)
+            print('authenticated', flush=True)
+        except TokenVerifyError as e:
+            print('unauthenticated', file=sys.stderr)
+        return f(claims, *args, **kwargs)
+
+    return decorated
