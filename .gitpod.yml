@@ -32,3 +32,6 @@ ports:
   - name: xray-daemon
     port: 2000
     visibility: public
+  - name: express node
+    port: 8080
+    visibility: public
