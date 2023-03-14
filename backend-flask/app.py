@@ -74,7 +74,8 @@ RequestsInstrumentor().instrument()
 
 frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
-origins = [frontend, backend]
+nodend = os.getenv('NODE_URL')
+origins = [frontend, backend, nodend]
 cors = CORS(
   app, 
   resources={r"/api/*": {"origins": origins}},
@@ -149,7 +150,7 @@ def data_create_message():
 
 @app.route("/api/activities/home", methods=['GET'])
 def data_home():
-  app.logger.debug(request.headers)
+  token = request.headers.get("Authorization")
   # try:
   #   claims = cognito_jwt_token.verify(access_token)
   #   # authenticated request
@@ -162,6 +163,7 @@ def data_home():
   #   app.logger.debug(e)
   #   app.logger.debug("unauthenticated")
   data = HomeActivities.run()
+  verify_token(token)
   return data, 200
 
 @app.route("/api/activities/notifications", methods=['GET'])

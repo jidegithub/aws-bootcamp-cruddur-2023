@@ -4,14 +4,15 @@ const morgan = require('morgan');
 const { CognitoJwtVerifier } = require("aws-jwt-verify");
 
 const app = express();
+const port = 8080;
 
 app.use(morgan('dev'))
 
 const jwtVerifier = CognitoJwtVerifier.create({
   userPoolId: process.env['AWS_COGNITO_USER_POOL_ID'],
-  tokenUse: "access",
+  tokenUse: null,
   clientId: process.env['AWS_COGNITO_USER_POOL_CLIENT_ID'],
-  scope: "read",
+  // scope: ["aws.cognito.signin.user.admin"],
 });
 
 // health check endpoint
@@ -44,7 +45,7 @@ jwtVerifier
   })
   .then(() =>
     app.listen(port, () => {
-      console.log("Example app listening at http://localhost:8080");
+      console.log(`verifier app listening at http://localhost:${port}`);
     })
   );
 

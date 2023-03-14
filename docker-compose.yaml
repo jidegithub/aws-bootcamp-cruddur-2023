@@ -14,7 +14,8 @@ services:
       # AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}*"
       # AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
       AWS_COGNITO_USER_POOL_ID: "${REACT_APP_AWS_USER_POOL_ID}"
-      AWS_COGNITO_USER_POOL_CLIENT_ID: "${REACT_APP_CLIENT_ID}" 
+      AWS_COGNITO_USER_POOL_CLIENT_ID: "${REACT_APP_CLIENT_ID}"
+      NODE_URL: "${NODE_URL}" 
     build: ./backend-flask
     ports:
       - "4567:4567"
@@ -30,8 +31,8 @@ services:
       - 9229:9229
     command: npm start
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./:/backend-nodejs
+      - /backend-nodejs/node_modules
     networks:
       - internal-network
     depends_on:
