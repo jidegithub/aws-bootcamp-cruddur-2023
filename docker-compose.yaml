@@ -21,11 +21,17 @@ services:
     volumes:
       - ./backend-flask:/backend-flask
   backend-nodejs:
+    environment:
+      AWS_COGNITO_USER_POOL_ID: "${REACT_APP_AWS_USER_POOL_ID}"
+      AWS_COGNITO_USER_POOL_CLIENT_ID: "${REACT_APP_CLIENT_ID}" 
     build: ./backend-node
     ports:
       - 8080:8080
+      - 9229:9229
+    command: npm start
     volumes:
-      - .:/app
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     networks:
       - internal-network
     depends_on:
