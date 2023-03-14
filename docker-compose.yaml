@@ -20,8 +20,12 @@ services:
       - "4567:4567"
     volumes:
       - ./backend-flask:/backend-flask
-  sidecar:
-    image: busybox
+  nodejs:
+    build: backend-node
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app
     depends_on:
       - "backend-flask"
   frontend-react-js:
