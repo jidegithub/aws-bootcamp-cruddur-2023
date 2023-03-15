@@ -31,6 +31,12 @@ Amplify.configure({
   }
 });
 
+useEffect(() => {
+  if (process.env.USER === 'codespace'){
+    process.env.REACT_APP_BACKEND_URL = `https://${process.env.CODESPACE_NAME}-4567.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
+  }
+}, []);
+
 const router = createBrowserRouter([
   {
     path: "/",
