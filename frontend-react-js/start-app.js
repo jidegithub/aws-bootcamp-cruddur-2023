@@ -8,7 +8,7 @@ if (process.env.USER === 'codespace') {
   process.env.REACT_APP_BACKEND_URL = `https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`;
 }
 
-console.log(process.env.REACT_APP_BACKEND_URL)
+console.log('user', process.env.USER)
 
 // start the React app
 require('react-scripts/scripts/start');
