@@ -1,1 +1,2 @@
 docker/dynamodb/shared-local-instance.db
+backend-node/node_modules
