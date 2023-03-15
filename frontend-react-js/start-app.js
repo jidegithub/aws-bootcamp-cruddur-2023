@@ -1,5 +1,5 @@
 // load environment variables from .env file
-require('dotenv').config();
+require('dotenv').config({path: './.env.example', override: true, debug: true});
 
 // check the value of USER and modify it if necessary
 if (process.env.USER === 'codespace') {
@@ -7,6 +7,8 @@ if (process.env.USER === 'codespace') {
 } else if (process.env.USER === 'gitpod') {
   process.env.REACT_APP_BACKEND_URL = `https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}`;
 }
+
+console.log(process.env.REACT_APP_BACKEND_URL)
 
 // start the React app
 require('react-scripts/scripts/start');
