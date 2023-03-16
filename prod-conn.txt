@@ -1,4 +1,0 @@
-
-export PROD_CONNECTION_URL="postgresql://cruddurroot:postgresPass@cruddur-db-instance.c1uivrlpdtec.us-east-1.rds.amazonaws.com:5432/cruddur"
-
-gp env PROD_CONNECTION_URL="postgresql://cruddurroot:postgresPass@cruddur-db-instance.c1uivrlpdtec.us-east-1.rds.amazonaws.com:5432/cruddur"
