@@ -14,7 +14,7 @@ def verify_token(token):
     try:
         request = urllib.request.Request(verification_endpoint)
         request.add_header('Authorization', access_token)
-        response = urllib.request.urlopen(request)
+        response = urllib.request.urlopen(request, timeout=10)
         print(list(response), flush=True)
         return list(response)
     except requests.exceptions.RequestException as e:
