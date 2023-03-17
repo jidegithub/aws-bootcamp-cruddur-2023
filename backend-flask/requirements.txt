@@ -10,3 +10,5 @@ rollbar
 aws-xray-sdk
 watchtower
 python-jose
+psycopg[binary]
+psycopg[pool]
