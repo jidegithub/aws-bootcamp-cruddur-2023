@@ -11,3 +11,6 @@ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -;
 sudo apt-get update -y;
 sudo apt install -y postgresql-client-13 libpq-dev
+
+# AWS set current space ip address and update rds security group rule
+export ENVIRONMENT_IP=$(curl ifconfig.me)
