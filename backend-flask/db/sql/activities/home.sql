@@ -12,3 +12,5 @@ SELECT
 FROM public.activities
 LEFT JOIN public.users ON users.uuid = activities.user_uuid
 ORDER BY activities.created_at DESC
+
+-- LEFT JOIN: returns all rows from the left table, even if there are no matches in the right table.
