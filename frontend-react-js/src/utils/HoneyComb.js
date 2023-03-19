@@ -16,8 +16,8 @@ export const initInstrumentation = () => {
 console.log(`Connecting to ${process.env.REACT_APP_OTEL_COLLECTOR_ENDPOINT}/v1/traces collector`)
 
   const resource = new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'cruddur-frontend',
-    application: 'crddur',
+    [SemanticResourceAttributes.SERVICE_NAME]: 'cruddur-frontend-reactjs',
+    application: 'cruddur',
   })
 
   const provider = new WebTracerProvider({ resource })

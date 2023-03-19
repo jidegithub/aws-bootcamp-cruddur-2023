@@ -6,7 +6,7 @@ services:
       BACKEND_URL: "${BACKEND_URL}"
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
       OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
-      OTEL_SERVICE_NAME: "${HONEYCOMB_SERVICE_NAME}"
+      OTEL_SERVICE_NAME: "cruddur-backend-flask"
       ROLLBAR_ACCESS_TOKEN: "${ROLLBAR_ACCESS_TOKEN}"
       AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
       AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
@@ -22,7 +22,7 @@ services:
     environment:
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
       OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
-      OTEL_SERVICE_NAME: "${HONEYCOMB_SERVICE_NAME_FRONTEND}"
+      OTEL_SERVICE_NAME: "cruddur-frontend-reactjs"
       REACT_APP_BACKEND_URL: "${REACT_APP_BACKEND_URL}"
       REACT_APP_AWS_USER_POOLS_ID: "${REACT_APP_AWS_USER_POOLS_ID}"
       REACT_APP_AWS_PROJECT_REGION: "${AWS_DEFAULT_REGION}"
@@ -31,6 +31,9 @@ services:
     build: ./frontend-react-js
     ports:
       - "3000:3000"
+    depends_on:
+      - backend-flask
+      - otel-collector
     volumes:
       - ./frontend-react-js:/frontend-react-js
   dynamodb-local:
@@ -66,11 +69,10 @@ services:
     ports:
       - 2000:2000/udp
   otel-collector:
+    image: "otel/opentelemetry-collector"
     environment:
       HONEYCOMB_API_KEY: "${HONEYCOMB_API_KEY}"
-    image: "otel/opentelemetry-collector"
     command: ["--config=/etc/otel-collector-config.yml"]
-
     volumes:
       - ./frontend-react-js/otel-collector-config.yml:/etc/otel-collector-config.yml
     ports:
@@ -78,8 +80,7 @@ services:
 volumes:
   db:
     driver: local
-  
-
+    
 # the name flag is a hack to change the default prepend folder
 # name when outputting the image names
 networks: 
