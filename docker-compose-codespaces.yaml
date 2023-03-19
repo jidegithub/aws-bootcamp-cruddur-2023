@@ -21,6 +21,7 @@ services:
       - "4567:4567"
     volumes:
       - ./backend-flask:/backend-flask
+
   frontend-react-js:
     environment:
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
@@ -39,6 +40,8 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend-react-js:/frontend-react-js
+      - '/app/node_modules'
+
   dynamodb-local:
     user: root
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
@@ -49,6 +52,7 @@ services:
     volumes:
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
+
   db:
     image: postgres:13-alpine
     restart: always
@@ -59,6 +63,7 @@ services:
       - '5432:5432'
     volumes: 
       - db:/var/lib/postgresql/data
+
   xray-daemon:
     image: "amazon/aws-xray-daemon"
     environment:
@@ -69,6 +74,7 @@ services:
       - "xray -o -b xray-daemon:2000"
     ports:
       - 2000:2000/udp
+
   otel-collector:
     image: "otel/opentelemetry-collector"
     environment:
@@ -78,9 +84,7 @@ services:
       - ./frontend-react-js/otel-collector-config.yml:/etc/otel-collector-config.yml
     ports:
       - 4318:4318   # pprof extension
-volumes:
-  db:
-    driver: local
+
   
 
 # the name flag is a hack to change the default prepend folder
@@ -89,3 +93,6 @@ networks:
   internal-network:
     driver: bridge
     name: cruddur
+volumes:
+  db:
+    driver: local

@@ -1,10 +1,11 @@
 FROM node:16-alpine3.16 as development
 
-ENV PATH /app/node_modules/.bin:$PATH
 ENV PORT=3000
 ENV NODE_ENV development
 
 WORKDIR /frontend-react-js
+
+ENV PATH /frontend-react-js/node_modules/.bin:$PATH
 
 COPY package.json .
 COPY package-lock.json .
