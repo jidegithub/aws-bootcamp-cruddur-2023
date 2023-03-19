@@ -8,7 +8,7 @@ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 const exporter = new OTLPTraceExporter({
   url: process.env.REACT_APP_FRONTEND_URL,
   headers: {
-    "x-honeycomb-team": process.env.HONEYCOMB_API_KEY,
+    "x-honeycomb-team": process.env.HONEYCOMB_API_KEY_FRONTEND,
   },
 });
 
