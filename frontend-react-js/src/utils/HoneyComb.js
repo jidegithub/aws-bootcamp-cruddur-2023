@@ -10,10 +10,9 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
 
 export const initInstrumentation = () => {
   const exporter = new OTLPTraceExporter({
-    url: `${process.env.REACT_APP_OTEL_COLLECTOR_ENDPOINT}/v1/traces`,
-    // url: `${process.env.OTEL_COLLECTOR_DAEMON_ADDRESS}/trace`,
+    url: `${process.env.REACT_APP_FRONTEND_URL}/v1/traces`,
   })
-console.log(`Connecting to ${process.env.REACT_APP_OTEL_COLLECTOR_ENDPOINT}/v1/traces collector`)
+console.log(`Connecting to ${process.env.REACT_APP_BACKEND_URL}/v1/traces collector`)
 
   const resource = new Resource({
     [SemanticResourceAttributes.SERVICE_NAME]: 'cruddur-frontend-reactjs',

@@ -4,12 +4,13 @@ receivers:
       http: # port 4318
         cors:
           allowed_origins:
-            - "https://*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
-exporters:
-  otlp:
-    endpoint: "api.honeycomb.io:443"
-    headers:
-      "x-honeycomb-team": "h7GZS9kshozbtFTcrIuhUD"
+            # - "https://*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+            - http://*
+            - https://*
+          allowed_headers:
+            - "*"
+          max_age: 7200
+
 processors:
   #Include a batch processor to batch telemetry before sending to Honeycomb
   batch:
@@ -22,6 +23,14 @@ processors:
       spanevent:
         - 'attributes["grpc"] == true'
         - 'IsMatch(name, ".*grpc.*") == true'
+
+exporters:
+  otlp:
+    endpoint: "api.honeycomb.io:443"
+    headers:
+      "x-honeycomb-team": "${HONEYCOMB_API_KEY}"
+  logging:
+    loglevel:debug
 service:
   pipelines:
     traces:
