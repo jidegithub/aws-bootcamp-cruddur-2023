@@ -11,12 +11,17 @@ const exporter = new OTLPTraceExporter({
     "x-honeycomb-team": process.env.HONEYCOMB_API_KEY,
   },
 });
+
+console.log(`Connecting to ${process.env.REACT_APP_FRONTEND_URL}/v1/traces collector`)
+
 const provider = new WebTracerProvider({
   resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'browser',
+    [SemanticResourceAttributes.SERVICE_NAME]: 'cruddur-frontend-reactjs'
   }),
 });
+
 provider.addSpanProcessor(new BatchSpanProcessor(exporter));
+
 provider.register({
   contextManager: new ZoneContextManager()
 });
