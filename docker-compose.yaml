@@ -73,6 +73,16 @@ services:
       - "xray -o -b xray-daemon:2000"
     ports:
       - 2000:2000/udp
+  otel-collector:
+    environment:
+      HONEYCOMB_API_KEY: "${HONEYCOMB_API_KEY}"
+    image: "otel/opentelemetry-collector"
+    command: ["--config=/etc/otel-collector-config.yml"]
+
+    volumes:
+      - ./frontend-react-js/otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - 4318:4318   # pprof extension
 volumes:
   db:
     driver: local
