@@ -29,7 +29,7 @@ services:
   frontend-react-js:
     environment:
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
-      OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
+      OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY_FRONTEND}"
       OTEL_SERVICE_NAME: "cruddur-frontend-reactjs"
       REACT_APP_BACKEND_URL: "${REACT_APP_BACKEND_URL}"
       REACT_APP_AWS_USER_POOL_ID: "${REACT_APP_AWS_USER_POOL_ID}"
