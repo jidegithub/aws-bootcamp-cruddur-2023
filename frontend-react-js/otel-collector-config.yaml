@@ -1,0 +1,30 @@
+receivers:
+  otlp:
+    protocols:
+      http: # port 4318
+        cors:
+          allowed_origins:
+            - "https://*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+exporters:
+  otlp:
+    endpoint: "api.honeycomb.io:443"
+    headers:
+      "x-honeycomb-team": "h7GZS9kshozbtFTcrIuhUD"
+processors:
+  #Include a batch processor to batch telemetry before sending to Honeycomb
+  batch:
+  # add the filterprocessor
+  filter:
+    #  tell it to operate on span data
+    traces:
+      # Filter out span events with the 'grpc' attribute,
+      # or have a span event name with 'grpc' in it.
+      spanevent:
+        - 'attributes["grpc"] == true'
+        - 'IsMatch(name, ".*grpc.*") == true'
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp]
