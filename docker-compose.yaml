@@ -80,6 +80,19 @@ services:
     - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
     environment:
     - loglevel=debug
+  jwt-authorizer:
+    build:
+      context: ./jwt-authorizer-api/
+      # expose:
+      #   - "80"
+      #   - "8001"
+    ports:
+      - 3002:3002
+    volumes:
+      # - ./envoy/front-envoy.yaml:/etc/front-envoy.yaml
+      - ./jwt-authorizer-api/:/app
+    environment:
+      loglevel: debug
 
 volumes:
   db:
