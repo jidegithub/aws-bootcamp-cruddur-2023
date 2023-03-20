@@ -56,16 +56,16 @@ services:
   #   volumes:
   #     - "./docker/dynamodb:/home/dynamodblocal/data"
   #   working_dir: /home/dynamodblocal
-  db:
-    image: postgres:13-alpine
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-    ports:
-      - '5432:5432'
-    volumes: 
-      - db:/var/lib/postgresql/data
+  # db:
+  #   image: postgres:13-alpine
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=password
+  #   ports:
+  #     - '5432:5432'
+  #   volumes: 
+  #     - db:/var/lib/postgresql/data
   xray-daemon:
     image: "amazon/aws-xray-daemon"
     environment:
@@ -79,7 +79,7 @@ services:
   otel-collector:
     image: "otel/opentelemetry-collector"
     environment:
-      HONEYCOMB_API_KEY: "${HONEYCOMB_API_KEY_FRONTENDY}"
+      HONEYCOMB_API_KEY: "${HONEYCOMB_API_KEY_FRONTEND}"
     command: ["--config=/etc/otel-collector-config.yml"]
     volumes:
       - ./frontend-react-js/otel-collector-config.yml:/etc/otel-collector-config.yml
