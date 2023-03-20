@@ -57,7 +57,7 @@
 // console.log(`Connecting to ${process.env.REACT_APP_FRONTEND_URL}/v1/traces collector`)
 
 // const resource = new Resource({
-//   [SemanticResourceAttributes.SERVICE_NAME]: 'cruddur-frontend',
+//   [SemanticResourceAttributes.SERVICE_NAME]: 'cruddur-frontend-reactjs',
 // })
 
 // const provider = new WebTracerProvider({ resource })

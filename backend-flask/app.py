@@ -231,5 +231,13 @@ def health():
     data = {"success": True, "message": "healthy"}
     return data, 200
 
+@app.route("/v1/traces", methods=['POST','OPTIONS'])
+@cross_origin()
+def tracing_activities():
+  traces = request.json
+  app.logger.info("traces")
+  app.logger.info(traces)
+  return traces
+  
 if __name__ == "__main__":
   app.run(debug=True)
