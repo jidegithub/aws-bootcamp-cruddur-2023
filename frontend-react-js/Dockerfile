@@ -5,7 +5,7 @@ ENV NODE_ENV development
 
 WORKDIR /frontend-react-js
 
-ENV PATH /frontend-react-js/node_modules/.bin:$PATH
+ENV PATH /app/node_modules/.bin:$PATH
 
 COPY package.json .
 COPY package-lock.json .

@@ -40,7 +40,7 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend-react-js:/frontend-react-js
-      - '/app/node_modules'
+      # - '/frontend-react-js/node_modules'
 
   dynamodb-local:
     user: root
