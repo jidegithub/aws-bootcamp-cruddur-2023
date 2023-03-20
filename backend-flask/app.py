@@ -1,6 +1,5 @@
 import os
-from flask import Flask
-from flask import request
+from flask import Flask, request, make_response
 from flask_cors import CORS, cross_origin
 
 from services.home_activities import *
@@ -235,16 +234,18 @@ def health():
 
 @app.route("/api/v1/traces", methods=['POST'])
 @cross_origin()
-def tracing_activities(response):
-  traces = request.get_data()
-  # req_data = request.get_json(force=True)
+def tracing_activities():
+  # traces = request.get_data()
+  traces = request.get_json(force=True)
   app.logger.info("traces")
   app.logger.info(traces)
-  response.headers['Access-Control-Allow-Credentials'] = 'true' 
-  return response
+  response = make_response({"message": "i am inevitable!"})
+  response.headers['Access-Control-Allow-Credentials'] = "true" 
+  response.status_code = 200
   # send traces to 
   # https://api.honeycomb.io/v1/traces
   # return traces
+  return response
 
 if __name__ == "__main__":
   app.run(debug=True)
