@@ -11,16 +11,13 @@ const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventi
 const { XMLHttpRequestInstrumentation } = require('@opentelemetry/instrumentation-xml-http-request')
 
 const exporter = new OTLPTraceExporter({
-  // url: `${process.env.REACT_APP_OTEL_COLLECTOR_ENDPOINT}/v1/traces`,
-  url: `${process.env.REACT_APP_BACKEND_URL}/api/v1/traces`,
+  url: `${process.env.REACT_APP_OTEL_COLLECTOR_ENDPOINT}/v1/traces`,
   headers: {
-    "x-honeycomb-team": "h7GZS9kshozbtFTcrIuhUD",
+    "x-honeycomb-team": `${process.env.HONEYCOMB_API_KEY_FRONTEND}`,
   },
 });
 
-// console.log(`Connecting to ${process.env.REACT_APP_OTEL_COLLECTOR_ENDPOINT}/api/v1/traces collector`)
-console.log(`Connecting to ${process.env.REACT_APP_BACKEND_URL}/api/v1/traces collector`)
-
+console.log(`Connecting to ${process.env.REACT_APP_OTEL_COLLECTOR_ENDPOINT}/api/v1/traces collector`)
 
 const provider = new WebTracerProvider({
   resource: new Resource({
@@ -36,20 +33,16 @@ provider.register({
 });
 
 const fetchInstrumentation = new FetchInstrumentation({
-  // propagateTraceHeaderCorsUrls: [ `${process.env.REACT_APP_OTEL_COLLECTOR_ENDPOINT}` ], // this is too broad for production
-  propagateTraceHeaderCorsUrls: [ `${process.env.REACT_APP_BACKEND_URL}/api/v1/traces` ],
+  propagateTraceHeaderCorsUrls: [ new RegExp(`${process.env.REACT_APP_BACKEND_URL}`, 'g') ], // this is too broad for production
   clearTimingResources: true,
 });
 
 const xMLHttpRequestInstrumentation = new XMLHttpRequestInstrumentation({
-  // propagateTraceHeaderCorsUrls: [ `${process.env.REACT_APP_OTEL_COLLECTOR_ENDPOINT}` ],
-  propagateTraceHeaderCorsUrls: [ `${process.env.REACT_APP_BACKEND_URL}/api/v1/traces` ],
+  propagateTraceHeaderCorsUrls: [ new RegExp(`${process.env.REACT_APP_BACKEND_URL}`, 'g') ],
   clearTimingResources: true,
 });
 
 const documentLoadInstrumentation = new DocumentLoadInstrumentation()
-
-// fetchInstrumentation.setTracerProvider(provider);
 
 // Registering instrumentations
 registerInstrumentations({
@@ -59,11 +52,3 @@ registerInstrumentations({
     xMLHttpRequestInstrumentation,
   ],
 });
-
-// export default function TraceProvider({ children }) {
-//   return (
-//     <>
-//       {children}
-//     </>
-//   );
-// }

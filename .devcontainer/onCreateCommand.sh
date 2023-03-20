@@ -6,11 +6,13 @@ cd /workspaces/aws-bootcamp-cruddur-2023/frontend-react-js && npm update -g && n
 # backend pip requirements
 cd /workspaces/aws-bootcamp-cruddur-2023/backend-flask && pip3 install -r requirements.txt;
 
+# AWS set current space ip address and update rds security group rule
+export ENVIRONMENT_IP=$(curl ifconfig.me)
+source  ./workspaces/aws-bootcamp-cruddur-2023/backend-flask/bin/rds-update-sg-rule"
+
 # Postgresql
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list';
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -;
 sudo apt-get update -y;
 sudo apt install -y postgresql-client-13 libpq-dev
 
-# AWS set current space ip address and update rds security group rule
-export ENVIRONMENT_IP=$(curl ifconfig.me)
