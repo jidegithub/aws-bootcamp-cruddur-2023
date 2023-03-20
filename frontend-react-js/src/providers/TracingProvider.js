@@ -3,7 +3,7 @@ import {
   SimpleSpanProcessor,
 } from '@opentelemetry/sdk-trace-base';
 import { DocumentLoadInstrumentation } from '@opentelemetry/instrumentation-document-load';
-import { WebTracerProvider, BatchSpanProcessor } from '@opentelemetry/sdk-trace-web';
+import { WebTracerProvider } from '@opentelemetry/sdk-trace-web';
 import { W3CTraceContextPropagator } from '@opentelemetry/core'
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
 import { FetchInstrumentation } from '@opentelemetry/instrumentation-fetch';
@@ -33,7 +33,7 @@ const fetchInstrumentation = new FetchInstrumentation({
   propagateTraceHeaderCorsUrls: [/.+/g], // this is too broad for production
   clearTimingResources: true,
 });
-const httpInstrumentation = new HttpInstrumentation({})
+// const httpInstrumentation = new HttpInstrumentation({})
 const documentLoadInstrumentation = new DocumentLoadInstrumentation()
 
 // fetchInstrumentation.setTracerProvider(provider);
@@ -42,7 +42,6 @@ const documentLoadInstrumentation = new DocumentLoadInstrumentation()
 registerInstrumentations({
   instrumentations: [
     fetchInstrumentation,
-    httpInstrumentation,
     documentLoadInstrumentation
   ],
 });
