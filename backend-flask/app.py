@@ -82,11 +82,13 @@ frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
 origins = [frontend, backend]
 cors = CORS(
-  app, 
+  app,
   resources={r"/api/*": {"origins": origins}},
-  headers=['Content-Type', 'Authorization'], 
-  expose_headers='Authorization',
-  methods="OPTIONS,GET,HEAD,POST"
+  headers=['Content-Type', 'Authorization'],
+  allow_headers=["content-type", "if-modified-since", "traceparent", "Authorization"],
+  # expose_headers=['Authorization', 'Access-Control-Allow-Credentials'],
+  methods="OPTIONS,GET,HEAD,POST",
+  supports_credentials=True
 )
 
 # RollBar init
@@ -115,8 +117,8 @@ def init_rollbar():
 
 @app.route('/rollbar/test')
 def rollbar_test():
-    rollbar.report_message('Hello World!', 'warning')
-    return "Hello World!"
+  rollbar.report_message('Hello World!', 'warning')
+  return "Hello World!"
 
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():
@@ -231,13 +233,18 @@ def health():
     data = {"success": True, "message": "healthy"}
     return data, 200
 
-@app.route("/v1/traces", methods=['POST','OPTIONS'])
+@app.route("/api/v1/traces", methods=['POST'])
 @cross_origin()
-def tracing_activities():
-  traces = request.json
+def tracing_activities(response):
+  traces = request.get_data()
+  # req_data = request.get_json(force=True)
   app.logger.info("traces")
   app.logger.info(traces)
-  return traces
-  
+  response.headers['Access-Control-Allow-Credentials'] = 'true' 
+  return response
+  # send traces to 
+  # https://api.honeycomb.io/v1/traces
+  # return traces
+
 if __name__ == "__main__":
   app.run(debug=True)
