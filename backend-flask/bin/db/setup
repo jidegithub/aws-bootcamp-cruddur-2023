@@ -8,16 +8,16 @@ printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
 bin_path="$(realpath .)/bin"
 
-if [ "$1" = "prod" ]; then
-  echo "Running in production mode"
-    source "$bin_path/db/schema-load" $1
-    source "$bin_path/db/seed" $1
-else
+# if [ "$1" = "prod" ]; then
+#   echo "Running in production mode"
+#     source "$bin_path/db/schema-load" $1
+#     source "$bin_path/db/seed" $1
+# else
     source "$bin_path/db/drop"
     source "$bin_path/db/create"
     source "$bin_path/db/schema-load"
     source "$bin_path/db/seed"
-fi
+# fi
 
 
 
