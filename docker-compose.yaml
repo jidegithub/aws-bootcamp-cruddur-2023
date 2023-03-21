@@ -5,7 +5,7 @@ services:
       FRONTEND_URL: "${FRONTEND_URL}"
       BACKEND_URL: "${BACKEND_URL}"
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
-      OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
+      OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY_BACKEND}"
       OTEL_SERVICE_NAME: "cruddur-backend-flask"
       ROLLBAR_ACCESS_TOKEN: "${ROLLBAR_ACCESS_TOKEN}"
       AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
