@@ -16,7 +16,7 @@ services:
       AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
       AWS_COGNITO_USER_POOL_ID: "${REACT_APP_AWS_USER_POOL_ID}"
       AWS_COGNITO_USER_POOL_CLIENT_ID: "${REACT_APP_CLIENT_ID}"
-      CONNECTION_URL: "${CONNECTION_URL}"
+      CONNECTION_URL: "postgresql://postgres:password@db:5432"
     build: ./backend-flask
     ports:
       - "4567:4567"
