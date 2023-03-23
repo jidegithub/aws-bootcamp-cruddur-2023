@@ -28,6 +28,8 @@ services:
       retries: 3
     volumes:
       - ./backend-flask:/backend-flask
+    depends_on:
+      - db
   frontend-react-js:
     environment:
       REACT_APP_BACKEND_URL: "${REACT_APP_BACKEND_URL}"
@@ -42,6 +44,8 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend-react-js:/frontend-react-js
+    depends_on:
+      - backend-flask
   dynamodb-local:
     user: root
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
