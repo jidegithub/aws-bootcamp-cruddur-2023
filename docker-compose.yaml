@@ -37,7 +37,7 @@ services:
       REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}"
     build: 
       context: ./frontend-react-js
-      target: development
+      target: prod
     ports:
       - "3000:3000"
     volumes:
