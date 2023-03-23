@@ -3,7 +3,8 @@ import os
 import re
 import sys
 from flask import current_app as app
-
+# print("ojuju", flush=True)
+# print("conn", os.getenv("CONNECTION_URL"), flush=True)
 class Db:
   def __init__(self):
     self.init_pool()
