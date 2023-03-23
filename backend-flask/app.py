@@ -109,7 +109,6 @@ def data_message_groups():
     else:
       return model['data'], 200
       
-
   except TokenVerifyError as e:
     app.logger.debug(e)
     return {}, 401
@@ -138,13 +137,18 @@ def data_create_message():
   access_token = extract_access_token(request.headers)
   try:
     claims = cognito_jwt_token.verify(access_token)
-    # authenicatied request
-    app.logger.debug("authenicated")
+    # authenticated request
+    app.logger.debug("authenticated")
     cognito_user_id = claims['sub']
     message = request.json['message']
 
+    print("Request", dict(request.json), flush=True)
+
     message_group_uuid   = request.json.get('message_group_uuid',None)
     user_receiver_handle = request.json.get('user_receiver_handle',None)
+    
+    # print("msg grp uuid", message_group_uuid, flush=True)
+    # print("user receiver hndl", user_receiver_handle, flush=True)
 
     if message_group_uuid == None:
       # Create for the first time
@@ -168,9 +172,9 @@ def data_create_message():
     else:
       return model['data'], 200
   except TokenVerifyError as e:
-    # unauthenicatied request
+    # unauthenticated request
     app.logger.debug(e)
-    app.logger.debug("unauthenicated")
+    app.logger.debug("unauthenticated")
     return {}, 401
 
 @app.route("/api/activities/home", methods=['GET'])

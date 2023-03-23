@@ -41,7 +41,7 @@ export default function ActivityForm(props) {
         console.log('data:',data)
         if (data.message_group_uuid) {
           console.log('redirect to message group')
-          window.location.href = `/messages/${data.message_group_uuid}`
+          // window.location.href = `/messages/${data.message_group_uuid}`
         } else {
           props.setMessages(current => [...current,data]);
         }
