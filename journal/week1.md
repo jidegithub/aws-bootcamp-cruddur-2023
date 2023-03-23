@@ -6,7 +6,7 @@
 
 [Link to the backend docker file](../backend-flask/Dockerfile)
 
-The application is running behind a gunicorn server [config file](../backend-flask/config/gunicorn.conf.py)
+The application is running behind a Flask development server 
 
 ### Write the frontend docker file
 
@@ -39,35 +39,9 @@ docker-compose -f docker-compose.yml  up --build
 ## Write a React Page for Notifications
 Notification feature added to the application 
 
-![Notification react js endpoint](../_docs/assets/week1/Cruddur-create-notification.png)
+[Notification react js page](../frontend-react-js/src/pages/NotificationsFeedPage.js)
 
-## Run DynamoDB Local Container and ensure it works
-
-## Local machine
-### Create a table
-
-![Cruddur local dynamo table](../_docs/assets/week1/Mongo-create-local-table.png)
-
-### List Tables
-
-![List table](../_docs/assets/week1/Mongo-local-table.png)
-
-### Create an Item
-
-Please fine here the file used to create the item [Item file](../backend-flask/dynamo_db/items.json)
-
-```bash
-aws dynamodb  batch-write-item  --endpoint-url http://localhost:8000  --request-items file://backend-flask/dynamo_db/items.json --return-consumed-capacity TOTAL  --profile bootcamp --no-cli-pager
-```
-
-![Create item](../_docs/assets/week1/create-item-cruddur-table.png)
-
-### List items
-```bash
-aws dynamodb scan  --endpoint-url http://localhost:8000 --table-name Cruddur --no-cli-pager
-```
-![List items](../_docs/assets/week1/list-items.png)
-
+## Run Containers written in compose file and ensure it works
 ## Gitpod
 
 ### Create a table
@@ -81,66 +55,39 @@ aws dynamodb create-table  --endpoint-url http://localhost:8000  --table-name Cr
 ```bash
 aws dynamodb list-tables --endpoint-url http://localhost:8000  --no-cli-pager
 ```
-![Gitpo list table](../_docs/assets/week1/gitpod-dynamo-list-table.png)
-
-### Create an Item
-Please fine here the file used to create the item [Item file](../backend-flask/dynamo_db/items.json)
+![Gitpo list table](../_docs/assets/week1/gitpod-dynamodb-create-table.png)
+## Postgres
 
 ```bash
-aws dynamodb  batch-write-item  --endpoint-url http://localhost:8000  --request-items file://backend-flask/dynamo_db/items.json --return-consumed-capacity TOTAL --no-cli-pager
+curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+  echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list \
+  sudo apt update \
+  sudo apt install -y postgresql-client-13 libpq-dev
 ```
 
-![Gitpod create item](../_docs/assets/week1/gitpod-dynamo-create-item.png)
-
-### List items
 ```bash
-aws dynamodb scan  --endpoint-url http://localhost:8000 --table-name Cruddur --no-cli-pager
-```
-![Gitpod list items](../_docs/assets/week1/gitpod-dynamo-list-items.png)
-
-## Postgre
-
-Here is the to install postgres in gitpod [install postgres](/bash/bootstrap_gitpod.sh)
-
-```bash
-psql  --host 127.0.0.1 --user postgres
+psql  --host 127.0.0.1 -Upostgres
 postgres-# \l
 ```
 ![Gitpod postgres](../_docs/assets/week1/gitpod-postgres.png)
 
 # Homework Challenges
-
-## Run the dockerfile CMD as an external script 
-
-[Backend Docker file](../backend-flask/Dockerfile#L6)
-
-[Frontend Docker file](../backend-flask/Dockerfile#L31)
-
-The script is here [backend entrypoint](../backend-flask/entrypoint.sh) Or [frontend entrypoint](../frontend-react-js/entrypoint.sh)
-
-The script take 1 argument (service name [FLASK, NODE]) and depend on the argument, the right application is launched.
-
-Each application has their proper entrypoint for the feature cutom configuration.   
-
-
 ## Push and tag a image to DockerHub (they have a free tier)
 
-The image is available to the public
+Image is available to the public
 
-Local push proof 
+Docker push
 
 ![push docker image](../_docs/assets/week1/proof-docker-image-backend.png)
 
 Docker hub 
 
-![push docker image](../_docs/assets/week1/Docker%20Hub.png)
+![push docker image](../_docs/assets/week1/DockerHub.png)
 
 Pull the image 
 
 ```bash
-docker pull zk15xyz/cruddur-backend:latest
-docker pull zk15xyz/cruddur-frontend:latest
-
+docker pull olajidedocker/aws-bootcamp-cruddur-2023_frontend-react-js:v2
 ```
 
 
@@ -149,59 +96,31 @@ docker pull zk15xyz/cruddur-frontend:latest
 #### Frontend 
 
 ```bash
-FROM node:16.18 AS base
-COPY . /frontend-react-js
+FROM node:16-alpine3.16 as build
 
-FROM base AS app
+ENV PATH /app/node_modules/.bin:$PATH
+ENV PORT=3000
+ENV NODE_ENV development
+
 WORKDIR /frontend-react-js
-RUN npm install
+COPY package.json .
+COPY package-lock.json .
+COPY . /frontend-react-js
+RUN npm ci --silent
+RUN npm run build
 
-FROM app As Prod
-CMD ["./entrypoint.sh", "NODE"]
+FROM node:16-alpine3.16 as prod
+
+COPY --from=build /frontend-react-js/build /build
+
+# Set the env to "production"
+ENV NODE_ENV production
+ENV npm_config_yes=true 
+# Expose the port on which the app will be running (3000 is the default that `serve` uses)
+EXPOSE ${PORT}
+# Start the app
+CMD [ "npx", "serve", "build" ]
 ```
-#### Backend 
-
-```bash
-# For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.10 AS base
-RUN python --version
-
-# Install required package 
-RUN git version
-EXPOSE 8080
-
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE=1
-
-# Turns off buffering for easier container logging
-ENV PYTHONUNBUFFERED=1
-
-# Install pip requirements
-COPY requirements.txt .
-RUN python -m pip install -r requirements.txt 
-
-
-FROM base AS app
-WORKDIR /app
-COPY . /app
-
-# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-
-# Creates a non-root user with an explicit UID and adds permission to access the /app folder
-# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
-
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
-USER appuser
-
-FROM app As Prod
-# RUN pip install .
-COPY config/gunicorn.conf.py  /etc/gunicorn.conf.py
-CMD ["./entrypoint.sh", "FLASK"]
-```
-Demo 
-
-https://user-images.githubusercontent.com/18516249/221060787-149f66da-4959-426a-8a84-aae177d4fa63.mp4
-
 ## Implement a healthcheck in the V3 Docker compose file
 
 
@@ -236,21 +155,7 @@ def health():
       timeout: 2s
       retries: 3
 ```
-
-4. Configure the dependency in frontend service
-
-```yaml
-    depends_on:
-      backend-flask:
-        condition: service_healthy
-```
-
-If the health check fails, the application will stop running
-
-### Demo
-https://user-images.githubusercontent.com/18516249/221273746-66ff216b-525e-4814-97b5-3f5040bbf595.mp4
-
-## Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
+## Research best practices for Dockerfiles and implement it in your Dockerfile
 1. Create separate Dockerfile for production and dev 
 2. Use a destroless base image to avoid unused library and improve the vulnerabilities
 3. Builder images (multi-stage builds)
@@ -269,26 +174,13 @@ https://user-images.githubusercontent.com/18516249/221273746-66ff216b-525e-4814-
 ### Pull the created image from docker hub
 ![AWS instance](../_docs/assets/week1/aws-pull-image.png)
 
-### Run cruddur in the EC2 
-I didn't uplaod my projet to the instance, I only uploaded the dockerFile and remove the volume part and execute the docker-compose up
+### Run cruddur within in the EC2 Instance and expose to a public port
+I pull the image from dockerHub and ran it on with 3000:3000 host to
+container port mapping
 
 ![Cruddur in EC2](../_docs/assets/week1/ec2-cruddur.png)
 
-![IP EC2](../_docs/assets/week1/ec2-proof-ip.png)
-
 ![SG](../_docs/assets/week1/ec2-SG-proof.png)
-
-## Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
-
-1. Docker locally 
-
-https://user-images.githubusercontent.com/18516249/220201375-0b20206e-be26-479b-af17-704fd9a63a14.mp4
-
-
-1. Cruddur locally
-
-![Local docker](../_docs/assets/week1/cruddur-local.png)
-
 ## Add synk integration
 
 Scan the project by synk
