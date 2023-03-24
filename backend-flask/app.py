@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
+from time import strftime
 
 from services.home_activities import *
 from services.notifications_activities import *
@@ -34,18 +35,9 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 # from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
 
 # CLOUDWATCH logs
-# import watchtower
-# import logging
-# from time import strftime
-
-# Configuring Logger to Use CloudWatch
-# LOGGER = logging.getLogger(__name__)
-# LOGGER.setLevel(logging.DEBUG)
-# console_handler = logging.StreamHandler()
-# cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
-# LOGGER.addHandler(console_handler)
-# LOGGER.addHandler(cw_handler)
-# LOGGER.info("hello from app.py!")
+import logging
+from services.logging.logger import setup_logger
+setup_logger()
 
 # Initialize tracing and an exporter that can send data to Honeycomb
 provider = TracerProvider()
@@ -77,6 +69,8 @@ FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
 
 
+logger = logging.getLogger("cruddur-backend-flask")
+
 frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
 origins = [frontend, backend]
@@ -100,6 +94,7 @@ def rollbar_test():
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():
   access_token = extract_access_token(request.headers)
+  logger.info("message group request is received")
   try:
     claims = cognito_jwt_token.verify(access_token)
     cognito_user_id = claims['sub']
@@ -259,16 +254,18 @@ def data_activities_reply(activity_uuid):
 
 @app.route("/api/health", methods=["GET"])
 def health():
-    app.logger.info("health request received")
+    logger.info("health request received")
     data = {"success": True, "message": "healthy"}
     return data, 200
+
+@app.after_request
+def after_request(response):
+  timestamp = strftime('[%Y-%b-%d %H:%M]')
+  logger.info("hello from app.py!")
+  logger.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+  return response
 
 if __name__ == "__main__":
   app.run(debug=True)
 
 
-# @app.after_request
-# def after_request(response):
-#     timestamp = strftime('[%Y-%b-%d %H:%M]')
-#     LOGGER.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
-#     return response
