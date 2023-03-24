@@ -8,8 +8,8 @@ export default function MessageFeed(props) {
         <div className='title'>Messages</div>
       </div>
       <div className='message_feed_collection'>
-        {props.messages.map(message => {
-        return  <MessageItem key={message.uuid} message={message} />
+        {props.messages.map((message,i) => {
+        return  <MessageItem key={message.uuid+i} message={message} />
         })}
       </div>
     </div>

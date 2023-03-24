@@ -1,5 +1,5 @@
 import './MessageForm.css';
-import React from "react";
+import React, { useEffect } from "react";
 import process from 'process';
 import { useParams } from 'react-router-dom';
 
@@ -57,6 +57,10 @@ export default function ActivityForm(props) {
     setCount(event.target.value.length);
     setMessage(event.target.value);
   }
+
+  // React.useEffect(() => {
+
+  // },[])
 
   return (
     <form 
