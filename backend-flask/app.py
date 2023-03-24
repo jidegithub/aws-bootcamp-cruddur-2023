@@ -16,13 +16,13 @@ from services.messages import *
 from services.create_message import *
 from services.show_activity import *
 from services.users_short import *
+from services.tracing.honeycomb import init_honeycomb
+from services.tracing.aws_xray import init_xray
 
 # RollBar Service
 from services.rollbar import init_rollbar, rollbar
-
 # AWS token verifier
 from lib.cognito_jwt_token import CognitoJwtToken, extract_access_token, TokenVerifyError
-
 # HoneyComb
 from opentelemetry import trace
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
@@ -31,24 +31,10 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-# X-RAY
-# from aws_xray_sdk.core import xray_recorder
-# from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
-
 # CLOUDWATCH Logs
 from services.logging.logger import setup_logger
 setup_logger()
-
-# Initialize tracing and an exporter that can send data to Honeycomb
-provider = TracerProvider()
-processor = BatchSpanProcessor(OTLPSpanExporter())
-provider.add_span_processor(processor)
-
-# Show this in the logs within the backend-flask app (STDOUT)
-#simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
-#provider.add_span_processor(simple_processor)
-trace.set_tracer_provider(provider)
-tracer = trace.get_tracer(__name__)
+logger = logging.getLogger("cruddur-backend-flask")
 
 app = Flask(__name__)
 
@@ -59,17 +45,12 @@ cognito_jwt_token = CognitoJwtToken(
 )
 
 # X_RAY
-# xray_url = os.getenv("AWS_XRAY_URL")
-# xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
-# XRayMiddleware(app, xray_recorder)
-
+# instrument with xray
+init_xray(app)
+ 
 # HoneyComb
 # Initialize automatic instrumentation with Flask
-FlaskInstrumentor().instrument_app(app)
-RequestsInstrumentor().instrument()
-
-
-logger = logging.getLogger("cruddur-backend-flask")
+init_honeycomb(app)
 
 frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
