@@ -87,9 +87,8 @@ def create_message(client,message_group_uuid, created_at, message, my_user_uuid,
 
 
 message_group_uuid = "5ae290ed-55d1-47a0-bc6d-fe2bc2700399" #str(uuid.uuid4())
-users = get_user_uuids()
-
 now = datetime.now(timezone.utc).astimezone()
+users = get_user_uuids()
 
 create_message_group(
   client=dynamodb,
