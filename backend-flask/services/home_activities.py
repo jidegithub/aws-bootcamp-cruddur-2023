@@ -8,10 +8,7 @@ from aws_xray_sdk.core import xray_recorder
 # Honeycomb
 tracer = trace.get_tracer("api.home.activities")
 # Logging
-
 logger = logging.getLogger("cruddur-backend-flask")
-
-tracer = trace.get_tracer("home.activities")
 
 
 class HomeActivities:
