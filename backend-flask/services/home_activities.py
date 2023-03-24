@@ -15,6 +15,7 @@ class HomeActivities:
   @tracer.start_as_current_span("api.home.activities.run")
   def run(cognito_user_id=None):
     with tracer.start_as_current_span("home-activites-inner"):
+      now = datetime.now(timezone.utc).astimezone()
       span = trace.get_current_span()
       span.set_attribute("app.received.date", f"{now.isoformat()}")
       span.set_attribute("app.now", now.isoformat())
