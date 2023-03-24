@@ -1,13 +1,13 @@
 from datetime import datetime, timedelta, timezone
 from opentelemetry import trace
 from lib.db import db
+import logging
 
 # aws xray
 from aws_xray_sdk.core import xray_recorder
 # Honeycomb
 tracer = trace.get_tracer("api.home.activities")
 # Logging
-import logging
 
 logger = logging.getLogger("cruddur-backend-flask")
 
