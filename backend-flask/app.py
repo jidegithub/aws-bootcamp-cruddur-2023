@@ -254,9 +254,9 @@ def data_activities_reply(activity_uuid):
 
 @app.route("/api/health", methods=["GET"])
 def health():
-    logger.info("health request received")
-    data = {"success": True, "message": "healthy"}
-    return data, 200
+  logger.info("health request received")
+  data = {"success": True, "message": "healthy"}
+  return data, 200
 
 @app.after_request
 def after_request(response):
