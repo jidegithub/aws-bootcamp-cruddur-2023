@@ -3,6 +3,7 @@ from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
 from time import strftime
+import logging
 
 from services.home_activities import *
 from services.notifications_activities import *
@@ -34,8 +35,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 # from aws_xray_sdk.core import xray_recorder
 # from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
 
-# CLOUDWATCH logs
-import logging
+# CLOUDWATCH Logs
 from services.logging.logger import setup_logger
 setup_logger()
 

@@ -1,7 +1,19 @@
 from datetime import datetime, timedelta, timezone
+from opentelemetry import trace
+
+#  Honeycomb
+tracer = trace.get_tracer("api.notification.activities")
+# Xray
+from aws_xray_sdk.core import xray_recorder
+
+
 class NotificationsActivities:
   def run():
-    now = datetime.now(timezone.utc).astimezone()
+    with xray_recorder.capture("api_notification_activities_run") as subsegment:
+      span = trace.get_current_span()  
+      now = datetime.now(timezone.utc).astimezone()
+
+
     results = [{
       'uuid': '68f126b0-1ceb-4a33-88be-d90fa7109eee',
       'handle':  'Sheldon Cooper',
@@ -23,4 +35,12 @@ class NotificationsActivities:
       }],
     }
     ]
+
+
+    span.set_attribute("app.result_length", len(results))
+    span.set_attribute(
+      "app.reply_to_activity_uuid", "68f126b0-1ceb-4a33-88be-d90fa7109eee"
+    )
+    subsegment.put_metadata("app.result_length", len(results))
+
     return results

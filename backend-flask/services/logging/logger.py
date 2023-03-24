@@ -6,7 +6,7 @@ def setup_logger():
     # create logging formatter
     logFormatter = logging.Formatter(fmt=' %(name)s :: %(levelname)-8s :: %(message)s')
     # Configuring Logger to Use CloudWatch
-    LOGGER = logging.getLogger("cruddur")
+    LOGGER = logging.getLogger("cruddur-backend-flask")
     LOGGER.setLevel(logging.DEBUG)
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(logFormatter)
