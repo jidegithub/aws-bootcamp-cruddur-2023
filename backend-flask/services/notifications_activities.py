@@ -13,6 +13,7 @@ logger = logging.getLogger("cruddur-backend-flask")
 class NotificationsActivities:
   @tracer.start_as_current_span("api.notification.activities.run")
   def run():
+    logger.info("Notification activities controller")
     with tracer.start_as_current_span("notifications-activites-inner"):
       span = trace.get_current_span()
       now = datetime.now(timezone.utc).astimezone()
@@ -48,6 +49,6 @@ class NotificationsActivities:
 
       span.set_attribute("app.result_length", len(results))
       subsegment.put_metadata("app.result_length", len(results))
-    logger.debug(f"Notification activities result: {results}")
+    logger.info(f"Notification activities result: {results}")
 
     return results

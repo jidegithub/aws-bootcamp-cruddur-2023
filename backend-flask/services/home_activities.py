@@ -14,6 +14,7 @@ logger = logging.getLogger("cruddur-backend-flask")
 class HomeActivities:
   @tracer.start_as_current_span("api.home.activities.run")
   def run(cognito_user_id=None):
+    logger.info("Home activities controller")
     with tracer.start_as_current_span("home-activites-inner"):
       span = trace.get_current_span()
       now = datetime.now(timezone.utc).astimezone()
@@ -26,7 +27,7 @@ class HomeActivities:
         results = db.query_array_json(sql)
         span.set_attribute("app.result_length", len(results))
         subsegment.put_metadata("app.result_length", len(results))
-      logger.debug(f"Home activities result: {results}")
+      logger.info(f"Home activities result: {results}")
 
     return results
       
