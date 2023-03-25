@@ -13,6 +13,6 @@ def setup_logger():
     console_handler.setFormatter(logFormatter)
     cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur-backend-flask')
     LOGGER.addHandler(console_handler)
-    if  os.getenv("ENABLE_CLOUD_WATCH_LOG") and os.getenv("ENABLE_CLOUD_WATCH_LOG").lower() == "true":
-    LOGGER.addHandler(cw_handler)
-    LOGGER.info("Cloud watch logger enabled")
+    if os.getenv("ENABLE_CLOUD_WATCH_LOG") and os.getenv("ENABLE_CLOUD_WATCH_LOG").lower() == "true":
+        LOGGER.addHandler(cw_handler)
+        LOGGER.info("Cloud watch logger enabled")
