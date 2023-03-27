@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const { CognitoJwtVerifier } = require("aws-jwt-verify");
 
 const app = express();
-const port = 8080;
+const port = 8082;
 
 app.use(morgan('dev'))
 
