@@ -14,17 +14,23 @@ tasks:
       echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
       sudo apt update
       sudo apt install -y postgresql-client-13 libpq-dev
+    command: |
+      export ENVIRONMENT_IP=$(curl ifconfig.me)
+      source  "$THEIA_WORKSPACE_ROOT/backend-flask/bin/rds/update-sg-rule"
   - name: react-js
     command: |
       cd frontend-react-js
       npm i
+  - name: flask
+    command: |
+      cd backend-flask
+      pip install -r requirements.txt
 vscode:
   extensions:
     - 42Crunch.vscode-openapi
 ports:
   - name: frontend
     port: 3000
-    onOpen: open-browser
     visibility: public
   - name: backend
     port: 4567
