@@ -6,9 +6,9 @@ const port = 3002;
 // Create the verifier outside your route handlers,
 // so the cache is persisted and can be shared amongst them.
 const jwtVerifier = CognitoJwtVerifier.create({
-  userPoolId: "eu-west-1_pIL9bTPxv",
+  userPoolId: "us-east-1_FzCLtlpCB",
   tokenUse: "access",
-  clientId: "6k3b101ejkmvk1al0tqjqav1vp",
+  clientId: "donfgu4tefui9tfb7nn2va1bv",
 });
 
 console.log("start application")

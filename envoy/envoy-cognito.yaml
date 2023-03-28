@@ -48,10 +48,10 @@ static_resources:
               providers:
                 cognito_provider:
                   clock_skew_seconds: 600
-                  issuer: "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_pIL9bTPxv"
+                  issuer: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_pIL9bTPxv"
                   remote_jwks:
                     http_uri:
-                      uri: "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_pIL9bTPxv/.well-known/jwks.json"
+                      uri: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_pIL9bTPxv/.well-known/jwks.json"
                       cluster: jwks-cluster
                       timeout: 5s
 
@@ -92,13 +92,13 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: cognito-idp.eu-west-1.amazonaws.com
+                address: cognito-idp.us-east-1.amazonaws.com
                 port_value: 443
     transport_socket:
       name: envoy.transport_sockets.tls
       typed_config:
         "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
-        sni: cognito-idp.eu-west-1.amazonaws.com
+        sni: cognito-idp.us-east-1.amazonaws.com
         common_tls_context: 
           validation_context:
             # match_subject_alt_names:
@@ -116,7 +116,7 @@ static_resources:
   #         - endpoint:
   #             address:
   #               socket_address:
-  #                 address: cognito-idp.eu-west-1.amazonaws.com
+  #                 address: cognito-idp.us-east-1.amazonaws.com
   #                 port_value: 443
   #       transport_socket:
   #         name: envoy.transport_sockets.tls

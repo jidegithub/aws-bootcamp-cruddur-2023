@@ -2,7 +2,7 @@
 set -e
 
 SERVICES="FLASK NODE"
-usage() {
+usage () {
     echo "Run the script with:"
     echo "$(basename "$0") <SERVICE> "
     echo
