@@ -22,7 +22,8 @@ from services.tracing.aws_xray import init_xray
 # RollBar Service
 from services.rollbar import init_rollbar, rollbar
 # AWS token verifier
-from lib.cognito_jwt_token import CognitoJwtToken, extract_access_token, TokenVerifyError
+from middleware.cognito_jwt_token_middleware import CognitoJwtTokenMiddleware
+
 # HoneyComb
 from opentelemetry import trace
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
@@ -37,12 +38,6 @@ setup_logger()
 logger = logging.getLogger("cruddur-backend-flask")
 
 app = Flask(__name__)
-
-cognito_jwt_token = CognitoJwtToken(
-  user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"), 
-  user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
-  region=os.getenv("AWS_DEFAULT_REGION")
-)
 
 # X_RAY
 # instrument with xray
@@ -156,22 +151,11 @@ def data_create_message():
     return {}, 401
 
 @app.route("/api/activities/home", methods=['GET'])
-def data_home():
-  access_token = extract_access_token(request.headers)
-  app.logger.debug("access_token")
-  app.logger.debug(access_token)
-  try:
-    claims = cognito_jwt_token.verify(access_token)
-    # authenticated request
-    app.logger.debug("authenticated")
-    app.logger.debug(claims)
-    app.logger.debug(claims['username'])
-    data = HomeActivities.run(cognito_user_id=claims['username'])
-  except TokenVerifyError as e:
-    # unauthenticated request
-    app.logger.debug(e)
-    app.logger.debug("unauthenticated")
-    data = HomeActivities.run()
+@CognitoJwtTokenMiddleware
+def data_home(user):
+  app.logger.info("request header from app")
+  # app.logger.info(request.headers)
+  data = HomeActivities.run(user)
   return data, 200
 
 @app.route("/api/activities/notifications", methods=['GET'])
