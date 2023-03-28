@@ -74,22 +74,21 @@ services:
       - 2000:2000/udp
   envoy-proxy:
     image: envoyproxy/envoy-alpine:latest
+    build: 
+      context: envoy/
+      dockerfile: Dockerfile
     ports:
-    - "80:80"
+    - "8080:8080"
     volumes:
-    - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    - ./envoy/envoy-cognito.yaml:/etc/front-envoy.yaml 
     environment:
     - loglevel=debug
   jwt-authorizer:
     build:
       context: ./jwt-authorizer-api/
-      # expose:
-      #   - "80"
-      #   - "8001"
     ports:
       - 3002:3002
     volumes:
-      # - ./envoy/front-envoy.yaml:/etc/front-envoy.yaml
       - ./jwt-authorizer-api/:/app
     environment:
       loglevel: debug
