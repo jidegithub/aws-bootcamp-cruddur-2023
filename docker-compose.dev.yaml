@@ -30,6 +30,22 @@ services:
       - ./backend-flask:/backend-flask
     depends_on:
       - db
+    backend-nodejs:
+      environment:
+        AWS_COGNITO_USER_POOL_ID: "us-east-1_FzCLtlpCB"
+        AWS_COGNITO_USER_POOL_CLIENT_ID: "donfgu4tefui9tfb7nn2va1bv" 
+      build: ./backend-node
+      ports:
+        - 8080:8080
+        - 9229:9229
+      command: npm start
+      volumes:
+        - ./:/backend-nodejs
+        - /backend-nodejs/node_modules
+      networks:
+        - internal-network
+      depends_on:
+        - db
   frontend-react-js:
     environment:
       REACT_APP_BACKEND_URL: "${REACT_APP_BACKEND_URL}"

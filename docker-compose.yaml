@@ -28,25 +28,6 @@ services:
       retries: 3
     volumes:
       - ./backend-flask:/backend-flask
-<<<<<<< HEAD
-  backend-nodejs:
-    environment:
-      AWS_COGNITO_USER_POOL_ID: "${REACT_APP_AWS_USER_POOL_ID}"
-      AWS_COGNITO_USER_POOL_CLIENT_ID: "${REACT_APP_CLIENT_ID}" 
-    build: ./backend-node
-    ports:
-      - 8080:8080
-      - 9229:9229
-    command: npm start
-    volumes:
-      - ./:/backend-nodejs
-      - /backend-nodejs/node_modules
-    networks:
-      - internal-network
-=======
->>>>>>> journal
-    depends_on:
-      - db
   frontend-react-js:
     environment:
       REACT_APP_BACKEND_URL: "${REACT_APP_BACKEND_URL}"
