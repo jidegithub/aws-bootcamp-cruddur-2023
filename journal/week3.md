@@ -64,19 +64,9 @@ Envoy front proxy is setup in front of the jwt-authorizer in order to proxy the 
 
 [Envoy Dockerfile](../envoy/Dockerfile)
 
-<!-- ## POC 
 
-[![Cruddur JWT with AWS lib](https://img.youtube.com/vi/Kb0ap_SgJuo/0.jpg)](https://www.youtube.com/watch?v=Kb0ap_SgJuo) -->
-
-
-# [Hard] Decouple the JWT verify process by using Envoy as a sidecar https://www.envoyproxy.io/
+# Decouple the JWT verify process by using Envoy as a sidecar https://www.envoyproxy.io/
 
 [Envoy Dockerfile](../envoy/Dockerfile)
 
 [Envoy config file](../envoy/envoy-cognito.yaml)
-
-<!-- ![Envoy log cognito auth](../_docs/assets/week3/envoy%20cognito%20output.png) -->
-
-<!-- #### POC (watch the below video)
-
-[![Decouple the JWT verify process by using Envoy](https://img.youtube.com/vi/vnjpJmxj1d0/0.jpg)](https://www.youtube.com/watch?v=vnjpJmxj1d0) -->
