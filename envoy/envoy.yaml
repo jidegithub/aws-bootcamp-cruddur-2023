@@ -53,12 +53,12 @@ static_resources:
                     #   - name: Authorization
                     #     value_prefix: "Bearer "
                   clock_skew_seconds: 600
-                  issuer: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_pIL9bTPxv"
+                  issuer: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_FzCLtlpCB"
                   # audiences:
                   #   - "6k3b101ejkmvk1al0tqjqav1vp"
                   remote_jwks:
                     http_uri:
-                      uri: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_pIL9bTPxv/.well-known/jwks.json"
+                      uri: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_FzCLtlpCB/.well-known/jwks.json"
                       cluster: jwks_cluster
                       timeout: 5s
 
