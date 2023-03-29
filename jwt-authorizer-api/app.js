@@ -8,11 +8,16 @@ const port = 3002;
 
 app.use(morgan('dev'))
 
+// Create the verifier outside your route handlers,
+// so the cache is persisted and can be shared amongst them.
 const jwtVerifier = CognitoJwtVerifier.create({
-  userPoolId: process.env['AWS_COGNITO_USER_POOL_ID'],
-  tokenUse: null,
-  clientId: process.env['AWS_COGNITO_USER_POOL_CLIENT_ID'],
-  // scope: ["aws.cognito.signin.user.admin"],
+  userPoolId: "us-east-1_FzCLtlpCB",
+  tokenUse: "access",
+  clientId: "donfgu4tefui9tfb7nn2va1bv",
+});
+
+app.get("/", async (req, res, next) => {
+  res.status(200).send(`<h1>Hello from jwt-authorizer</h1>`)
 });
 
 // health check endpoint
@@ -21,7 +26,8 @@ app.get('/health', (req, res) => {
 })
 
 // verifier endpoint
-app.get("/", async (req, res, next) => {
+console.log("start application")
+app.get("/auth/*", async (req, res, next) => {
   try {
     // A valid JWT is expected in the HTTP header "authorization"
     const token = req.header("Authorization")
@@ -59,3 +65,5 @@ app.use((err, req, res, next) => {
     next();
   }
 });
+
+module.exports = app;
