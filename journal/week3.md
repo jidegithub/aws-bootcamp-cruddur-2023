@@ -14,17 +14,18 @@
 # Homework Challenges 
 
 ## I took 2 Approaches
- - ### Flask Middleware Approach
- - ### Flask Middleware Decorator with @app.before_request decorator 
+ - ### Flask Middleware Approach, can be combined @app.before_request decorator
+ - ### Flask Middleware Decorator
 &nbsp; 
 
 # 1.Decouple the JWT verify from the application code by writing a Flask Middleware
 
-[python JWT cognito Middleware file](../backend-flask/lib/cognito_jwt_token.py)
+[python JWT cognito Middleware file](../backend-flask/middleware/cognito_jwt_token_middleware.py)
 
 # 2.Decouple the JWT verify from the application code by writing a Flask Middleware Decorator that intercepts every request before it gets to its corresponding routes
 
-[python JWT cognito Middleware Decorator file](../backend-flask/middleware/cognito_jwt_token_middleware.py)
+[python JWT cognito Middleware Decorator file](../backend-flask/lib/cognito_jwt_token.py)
+
 
 ![Middleware Decorator](../_docs/assets/week3/jwt-architectureII.png)
 
