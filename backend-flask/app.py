@@ -108,35 +108,6 @@ def data_messages(message_group_uuid):
 @app.route("/api/messages", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_create_message():
-<<<<<<< HEAD
-  user_sender_handle = 'andrewbrown'
-  user_receiver_handle = request.json['user_receiver_handle']
-  message = request.json['message']
-
-  model = CreateMessage.run(message=message,user_sender_handle=user_sender_handle,user_receiver_handle=user_receiver_handle)
-  if model['errors'] is not None:
-    return model['errors'], 422
-  else:
-    return model['data'], 200
-  return
-
-@app.route("/api/activities/home", methods=['GET'])
-def data_home():
-  token = request.headers.get("Authorization")
-  # try:
-  #   claims = cognito_jwt_token.verify(access_token)
-  #   # authenticated request
-  #   app.logger.debug("authenticated")
-  #   app.logger.debug(claims)
-  #   app.logger.debug(claims['username'])
-  #   data = HomeActivities.run(cognito_user_id=claims['username'])
-  # except TokenVerifyError as e:
-  #   # unauthenticated request
-  #   app.logger.debug(e)
-  #   app.logger.debug("unauthenticated")
-  data = HomeActivities.run()
-  verify_token(token)
-=======
   access_token = extract_access_token(request.headers)
   try:
     claims = cognito_jwt_token.verify(access_token)
@@ -186,7 +157,6 @@ def data_home(user):
   app.logger.info("request header from app")
   # app.logger.info(request.headers)
   data = HomeActivities.run(user)
->>>>>>> journal
   return data, 200
 
 @app.route("/api/activities/notifications", methods=['GET'])
