@@ -218,8 +218,8 @@ def data_activities_reply(activity_uuid):
   else:
     return model['data'], 200
 
-@app.route("/api/health", methods=["GET"])
-def health():
+@app.route("/api/health-check", methods=["GET"])
+def health_check():
   logger.info("health request received")
   data = {"success": True, "message": "healthy"}
   return data, 200
