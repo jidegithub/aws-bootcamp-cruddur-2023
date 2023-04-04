@@ -24,12 +24,12 @@
   },
   {
     "name": "backend-flask",
-    "image": "924351343865.dkr.ecr.us-east-1.amazonaws.com/backend-flask",
+    "image": "924351343865.dkr.ecr.us-east-1.amazonaws.com/backend-flask:latest",
     "essential": true,
     "healthCheck": {
       "command": [
         "CMD-SHELL",
-        "python /backend-flask/bin/health-check"
+        "python /backend-flask/bin/flask/health-check"
       ],
       "interval": 30,
       "timeout": 5,
