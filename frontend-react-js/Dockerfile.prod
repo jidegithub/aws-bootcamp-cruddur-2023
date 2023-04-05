@@ -11,7 +11,7 @@ COPY . /frontend-react-js
 RUN npm ci --production
 RUN npm run build
 
-FROM nginx:1.23.3-alpine3 as prod
+FROM nginx:1.23.4-alpine3.17 as prod
 
 COPY --from=build /frontend-react-js/build /usr/share/nginx/html
 
