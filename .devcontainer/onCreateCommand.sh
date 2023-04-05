@@ -14,3 +14,4 @@ sudo apt install -y postgresql-client-13 libpq-dev
 
 # AWS set current space ip address and update rds security group rule
 export ENVIRONMENT_IP=$(curl ifconfig.me)
+source  "/workspaces/aws-bootcamp-cruddur-2023/backend-flask/bin/rds/update-sg-rule"

@@ -32,7 +32,7 @@ const awsconfig = {
   }
 }
 
-// Auth.configure(awsconfig);
+Auth.configure(awsconfig);
 Amplify.configure(awsconfig);
 
 const router = createBrowserRouter([
