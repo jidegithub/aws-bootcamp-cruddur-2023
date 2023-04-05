@@ -1,4 +1,4 @@
-FROM node:16-alpine3.16 as build
+FROM 924351343865.dkr.ecr.us-east-1.amazonaws.com/cruddur-node:16.alpine-3.16 as build
 
 ENV PATH /app/node_modules/.bin:$PATH
 ENV PORT=3000
@@ -11,7 +11,7 @@ COPY . /frontend-react-js
 RUN npm ci --production
 RUN npm run build
 
-FROM nginx:1.23.4-alpine3.17 as prod
+FROM 924351343865.dkr.ecr.us-east-1.amazonaws.com/cruddur-nginx:1.23.4-alpine3.17 as prod
 
 COPY --from=build /frontend-react-js/build /usr/share/nginx/html
 
