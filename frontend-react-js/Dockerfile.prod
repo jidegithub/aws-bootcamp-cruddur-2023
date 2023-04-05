@@ -7,20 +7,21 @@ ENV NODE_ENV development
 ARG REACT_APP_BACKEND_URL
 ARG REACT_APP_AWS_PROJECT_REGION
 ARG REACT_APP_AWS_COGNITO_REGION
-ARG REACT_APP_AWS_USER_POOLS_ID
+ARG REACT_APP_AWS_USER_POOL_ID
 ARG REACT_APP_CLIENT_ID
 
 ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
 ENV REACT_APP_AWS_PROJECT_REGION=$REACT_APP_AWS_PROJECT_REGION
 ENV REACT_APP_AWS_COGNITO_REGION=$REACT_APP_AWS_COGNITO_REGION
-ENV REACT_APP_AWS_USER_POOLS_ID=$REACT_APP_AWS_USER_POOLS_ID
+ENV REACT_APP_AWS_USER_POOL_ID=$REACT_APP_AWS_USER_POOL_ID
 ENV REACT_APP_CLIENT_ID=$REACT_APP_CLIENT_ID
 
 WORKDIR /frontend-react-js
 COPY package.json .
 COPY package-lock.json .
 COPY . /frontend-react-js
-RUN npm ci --production
+# RUN npm ci --production
+RUN npm install
 RUN npm run build
 
 FROM 924351343865.dkr.ecr.us-east-1.amazonaws.com/cruddur-nginx:1.23.4-alpine3.17 as prod
@@ -29,9 +30,9 @@ COPY --from=build /frontend-react-js/build /usr/share/nginx/html
 COPY --from=build /frontend-react-js/nginx.conf /etc/nginx/nginx.conf
 
 # Set the env to "production"
-ENV NODE_ENV production
-ENV npm_config_yes=true 
+# ENV NODE_ENV production
+# ENV npm_config_yes=true 
 # Expose the port on which the app will be running on
 EXPOSE ${PORT}
 # Start the app
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["nginx", "-g", "daemon off;"]
