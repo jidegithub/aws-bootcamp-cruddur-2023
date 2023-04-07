@@ -1,0 +1,24 @@
+#! /usr/bin/bash
+set -e # stop if it fails at any point
+
+CLUSTER_NAME="cruddur"
+FRONTEND_SERVICE_NAME="frontend-react-js"
+FRONTEND_TASK_DEFINITION_FAMILY="frontend-react-js"
+BACKEND_SERVICE_NAME="backend-flask"
+BACKEND_TASK_DEFINITION_FAMILY="backend-flask"
+RDS_INSTANCE="cruddur-db-instance"
+
+echo "STARTING FRONTEND TASK"
+aws ecs update-service \
+--cluster $CLUSTER_NAME \
+--service $FRONTEND_SERVICE_NAME \
+--task-definition $FRONTEND_TASK_DEFINITION_FAMILY --desired-count 1 --no-cli-pager
+
+echo "STARTING BACKEND TASK"
+aws ecs update-service \
+--cluster $CLUSTER_NAME \
+--service $BACKEND_SERVICE_NAME \
+--task-definition $BACKEND_TASK_DEFINITION_FAMILY --desired-count 1 --no-cli-pager
+
+echo "STARTING RDS"
+aws rds start-db-instance --db-instance-identifier $RDS_INSTANCE --no-cli-pager
