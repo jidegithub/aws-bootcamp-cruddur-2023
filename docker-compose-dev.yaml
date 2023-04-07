@@ -2,6 +2,8 @@ version: "3.8"
 services:
   backend-flask:
     environment:
+      FRONTEND_URL: "https://${CODESPACE_NAME}-3000.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"
+      BACKEND_URL: "https://${CODESPACE_NAME}-4567.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
       OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY_BACKEND}"
       OTEL_SERVICE_NAME: "cruddur-backend-flask"
@@ -13,7 +15,7 @@ services:
       AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
       AWS_COGNITO_USER_POOL_ID: "us-east-1_FzCLtlpCB"
       AWS_COGNITO_USER_POOL_CLIENT_ID: "donfgu4tefui9tfb7nn2va1bv"
-      CONNECTION_URL: "${CONNECTION_URL}"
+      CONNECTION_URL: "${CONNECTION_URL_DB}"
     env_file:
     - .env.codespaces
     build: ./backend-flask
@@ -34,12 +36,11 @@ services:
       - ./backend-flask:/backend-flask
   frontend-react-js:
     environment:
+      REACT_APP_BACKEND_URL: "https://${CODESPACE_NAME}-4567.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"
       REACT_APP_AWS_USER_POOL_ID: "us-east-1_FzCLtlpCB"
       REACT_APP_AWS_PROJECT_REGION: "${AWS_DEFAULT_REGION}"
       REACT_APP_CLIENT_ID: "donfgu4tefui9tfb7nn2va1bv"
       REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}"
-    env_file:
-    - .env.codespaces
     build: 
       context: ./frontend-react-js
       target: build
