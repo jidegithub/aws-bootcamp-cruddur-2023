@@ -44,8 +44,8 @@
       {"name": "OTEL_EXPORTER_OTLP_ENDPOINT", "value": "https://api.honeycomb.io"},
       {"name": "AWS_COGNITO_USER_POOL_ID", "value": "us-east-1_FzCLtlpCB"},
       {"name": "AWS_COGNITO_USER_POOL_CLIENT_ID", "value": "donfgu4tefui9tfb7nn2va1bv"},
-      {"name": "FRONTEND_URL", "value": "*"},
-      {"name": "BACKEND_URL", "value": "*"},
+      {"name": "FRONTEND_URL", "value": "https://jidecruddur.site"},
+      {"name": "BACKEND_URL", "value": "https://api.jidecruddur.site"},
       {"name": "AWS_DEFAULT_REGION", "value": "us-east-1"}
     ],
     "secrets": [
