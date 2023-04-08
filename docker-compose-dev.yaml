@@ -53,16 +53,16 @@ services:
     depends_on:
       - backend-flask
       - db
-  # dynamodb-local:
-  #   user: root
-  #   command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
-  #   image: "amazon/dynamodb-local:latest"
-  #   container_name: dynamodb-local
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - "./docker/dynamodb:/home/dynamodblocal/data"
-  #   working_dir: /home/dynamodblocal
+  dynamodb-local:
+    user: root
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
   db:
     image: postgres:13-alpine
     # restart: always
@@ -83,28 +83,28 @@ services:
       - "xray -o -b xray-daemon:2000"
     ports:
       - 2000:2000/udp
-  envoy-proxy:
-    image: envoyproxy/envoy-alpine:latest
-    build: 
-      context: envoy/
-      dockerfile: Dockerfile
-    ports:
-    - "8080:8080"
-    volumes:
-    - ./envoy/envoy-cognito.yaml:/etc/front-envoy.yaml 
-    environment:
-    - loglevel=debug
-  jwt-authorizer:
-    build:
-      context: ./jwt-authorizer-api/
-    ports:
-      - 3002:3002
-    volumes:
-      - ./jwt-authorizer-api/:/app
-    environment:
-      loglevel: debug
-      AWS_COGNITO_USER_POOL_ID: "${REACT_APP_AWS_USER_POOL_ID}"
-      AWS_COGNITO_USER_POOL_CLIENT_ID: "${REACT_APP_CLIENT_ID}"
+  # envoy-proxy:
+  #   image: envoyproxy/envoy-alpine:latest
+  #   build: 
+  #     context: envoy/
+  #     dockerfile: Dockerfile
+  #   ports:
+  #   - "8080:8080"
+  #   volumes:
+  #   - ./envoy/envoy-cognito.yaml:/etc/front-envoy.yaml 
+  #   environment:
+  #   - loglevel=debug
+  # jwt-authorizer:
+  #   build:
+  #     context: ./jwt-authorizer-api/
+  #   ports:
+  #     - 3002:3002
+  #   volumes:
+  #     - ./jwt-authorizer-api/:/app
+  #   environment:
+  #     loglevel: debug
+  #     AWS_COGNITO_USER_POOL_ID: "${REACT_APP_AWS_USER_POOL_ID}"
+  #     AWS_COGNITO_USER_POOL_CLIENT_ID: "${REACT_APP_CLIENT_ID}"
 
 volumes:
   db:
