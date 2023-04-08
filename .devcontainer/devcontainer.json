@@ -20,8 +20,13 @@
 			]
 		}
 	},
-	"onCreateCommand": "bash .devcontainer/onCreateCommand.sh"
-	
+	"hostRequirements": {
+		"cpus": 4,
+		"memory": "8gb",
+		"storage": "32gb"
+ 	},
+	"onCreateCommand": "bash .devcontainer/onCreateCommand.sh",
+	"postCreateCommand": "bash .devcontainer/postCreateCommand.sh",
 	
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -36,7 +41,6 @@
 	// "shutdownAction": "none",
 
 	// Uncomment the next line to run commands after the container is created.
-	// "postCreateCommand": "cat /etc/os-release",
 
 	// Configure tool-specific properties.
 	// "customizations": {},
