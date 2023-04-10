@@ -128,16 +128,15 @@ cognito_jwt_token = CognitoJwtToken(
 def CognitoJwtTokenMiddleware(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = None
         claims = None
+        cognito_user_id = None
         if "Authorization" in request.headers:
-            token = request.headers["Authorization"].split(" ")[1]
-        try:
-            access_token = cognito_jwt_token.extract_access_token(request.headers)
-            claims = cognito_jwt_token.verify(access_token)
-            print('authenticated', flush=True)
-        except TokenVerifyError as e:
-            print('unauthenticated', file=sys.stderr)
-        return f(claims, *args, **kwargs)
-
+            try:
+                access_token = cognito_jwt_token.extract_access_token(request.headers)
+                claims = cognito_jwt_token.verify(access_token)
+                cognito_user_id = claims['sub']
+                print('authenticated', flush=True)
+            except TokenVerifyError:
+                print('unauthenticated', file=sys.stderr)
+            return f(cognito_user_id, *args, **kwargs)
     return decorated

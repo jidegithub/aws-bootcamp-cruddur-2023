@@ -24,14 +24,6 @@ from services.rollbar import init_rollbar, rollbar
 # AWS token verifier
 from middleware.cognito_jwt_token_middleware import CognitoJwtTokenMiddleware
 
-# HoneyComb
-from opentelemetry import trace
-from opentelemetry.instrumentation.flask import FlaskInstrumentor
-from opentelemetry.instrumentation.requests import RequestsInstrumentor
-from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
 # CLOUDWATCH Logs
 from services.logging.logger import setup_logger
 setup_logger()
@@ -69,30 +61,27 @@ def rollbar_test():
     return "Hello World!"
 
 @app.route("/api/message_groups", methods=['GET'])
-def data_message_groups():
-  access_token = extract_access_token(request.headers)
+@CognitoJwtTokenMiddleware
+def data_message_groups(cognito_user_id):
   logger.info("message group request is received")
+  logger.info(cognito_user_id)
   try:
-    claims = cognito_jwt_token.verify(access_token)
-    cognito_user_id = claims['sub']
     model = MessageGroups.run(cognito_user_id=cognito_user_id)
     if model['errors'] is not None:
       return model['errors'], 422
     else:
       return model['data'], 200
-      
-  except TokenVerifyError as e:
+  except Exception as e:
     app.logger.debug(e)
     return {}, 401
 
 @app.route("/api/messages/<string:message_group_uuid>", methods=['GET'])
-def data_messages(message_group_uuid):
+@CognitoJwtTokenMiddleware
+def data_messages(cognito_user_id, message_group_uuid):
   user_sender_handle = 'grahams'
   user_receiver_handle = request.args.get('user_reciever_handle')
-  access_token = extract_access_token(request.headers)
+  # message_group_uuid   = request.json.get('message_group_uuid',None)
   try:
-    claims = cognito_jwt_token.verify(access_token)
-    cognito_user_id = claims['sub']
     model = Messages.run(
       message_group_uuid=message_group_uuid,
       cognito_user_id=cognito_user_id
@@ -101,19 +90,15 @@ def data_messages(message_group_uuid):
       return model['errors'], 422
     else:
       return model['data'], 200
-  except TokenVerifyError as e:
+  except Exception as e:
     app.logger.debug(e)
     return {}, 401
 
 @app.route("/api/messages", methods=['POST','OPTIONS'])
 @cross_origin()
-def data_create_message():
-  access_token = extract_access_token(request.headers)
+@CognitoJwtTokenMiddleware
+def data_create_message(cognito_user_id):
   try:
-    claims = cognito_jwt_token.verify(access_token)
-    # authenticated request
-    app.logger.debug("authenticated")
-    cognito_user_id = claims['sub']
     message = request.json['message']
 
     print("Request", dict(request.json), flush=True)
@@ -145,7 +130,7 @@ def data_create_message():
       return model['errors'], 422
     else:
       return model['data'], 200
-  except TokenVerifyError as e:
+  except Exception as e:
     # unauthenticated request
     app.logger.debug(e)
     app.logger.debug("unauthenticated")
@@ -186,7 +171,6 @@ def data_search():
     return model['errors'], 422
   else:
     return model['data'], 200
-  return
 
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
@@ -199,7 +183,6 @@ def data_activities():
     return model['errors'], 422
   else:
     return model['data'], 200
-  return
 
 @app.route("/api/activities/<string:activity_uuid>", methods=['GET'])
 def data_show_activity(activity_uuid):

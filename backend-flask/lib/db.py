@@ -55,7 +55,7 @@ class Db:
         cur.execute(sql,params)
         if is_returning_id:
           returning_id = cur.fetchone()[0]
-        conn.commit() 
+        conn.commit()
         if is_returning_id:
           return returning_id
     except Exception as err:
