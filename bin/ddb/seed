@@ -11,7 +11,7 @@ parent_path = os.path.abspath(os.path.join(current_path, '..', '..','backend-fla
 sys.path.append(parent_path)
 
 sys.path.append(parent_path)
-from lib.db import db
+from lib.db_local import db
 
 attrs = {
   'endpoint_url': 'http://localhost:8000'
