@@ -27,7 +27,5 @@ class HomeActivities:
         results = db.query_array_json(sql)
         span.set_attribute("app.result_length", len(results))
         subsegment.put_metadata("app.result_length", len(results))
-      logger.info(f"Home activities result: {results}")
 
     return results
-      

@@ -41,8 +41,8 @@ init_honeycomb(app)
 
 frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
-nodend = os.getenv('NODE_URL')
-origins = [frontend, backend, nodend]
+
+origins = [frontend, backend]
 cors = CORS(
   app, 
   resources={r"/api/*": {"origins": origins}},
@@ -138,10 +138,9 @@ def data_create_message(cognito_user_id):
 
 @app.route("/api/activities/home", methods=['GET'])
 @CognitoJwtTokenMiddleware
-def data_home(user):
+def data_home(cognito_user_id):
   app.logger.info("request header from app")
-  # app.logger.info(request.headers)
-  data = HomeActivities.run(user)
+  data = HomeActivities.run(cognito_user_id)
   return data, 200
 
 @app.route("/api/activities/notifications", methods=['GET'])

@@ -49,6 +49,5 @@ class NotificationsActivities:
 
       span.set_attribute("app.result_length", len(results))
       subsegment.put_metadata("app.result_length", len(results))
-    logger.info(f"Notification activities result: {results}")
 
     return results

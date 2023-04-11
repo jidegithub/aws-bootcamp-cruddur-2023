@@ -16,7 +16,9 @@ services:
       AWS_COGNITO_USER_POOL_ID: "${AWS_COGNITO_USER_POOL_ID}"
       AWS_COGNITO_USER_POOL_CLIENT_ID: "${AWS_COGNITO_USER_POOL_CLIENT_ID}"
       CONNECTION_URL: "${PROD_CONNECTION_URL}"
-    build: ./backend-flask
+    build: 
+      context: ./backend-flask
+      dockerfile: Dockerfile.prod
     ports:
       - "4567:4567"
     healthcheck:
