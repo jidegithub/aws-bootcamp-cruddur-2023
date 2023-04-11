@@ -1,7 +1,0 @@
-#! /usr/bin/bash
-set -e
-
-#! /usr/bin/bash
-set -e
-
-docker build -t backend-flask -f Dockerfile.prod .
