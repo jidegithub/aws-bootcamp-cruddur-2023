@@ -17,7 +17,6 @@ from services.create_message import *
 from services.show_activity import *
 from services.users_short import *
 from services.tracing.honeycomb import init_honeycomb
-from services.tracing.aws_xray import init_xray
 
 # RollBar Service
 from services.rollbar import init_rollbar, rollbar
@@ -31,10 +30,6 @@ logger = logging.getLogger("cruddur-backend-flask")
 
 app = Flask(__name__)
 
-# X_RAY
-# instrument with xray
-init_xray(app)
- 
 # HoneyComb
 # Initialize automatic instrumentation with Flask
 init_honeycomb(app)
@@ -154,7 +149,6 @@ def data_users_short(handle):
   return data, 200
 
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
-#@xray_recorder.capture('activities_users')
 def data_handle(handle):
   model = UserActivities.run(handle)
   if model['errors'] is not None:
