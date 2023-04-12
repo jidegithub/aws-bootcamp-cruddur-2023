@@ -200,11 +200,11 @@ def health_check():
   data = {"success": True, "message": "healthy"}
   return data, 200
 
-@app.after_request
-def after_request(response):
-  timestamp = strftime('[%Y-%b-%d %H:%M]')
-  logger.info('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
-  return response
+# @app.after_request
+# def after_request(response):
+#   timestamp = strftime('[%Y-%b-%d %H:%M]')
+#   logger.info('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+#   return response
 
 if __name__ == "__main__":
   app.run(debug=True)
