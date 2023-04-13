@@ -1,7 +1,7 @@
 import './UserFeedPage.css';
 import React from "react";
 import { useParams } from 'react-router-dom';
-import checkAuth from '../utils/CheckAuth'
+import {checkAuth, getAccessToken} from '../utils/CheckAuth';
 
 import DesktopNavigation  from '../components/DesktopNavigation';
 import DesktopSidebar     from '../components/DesktopSidebar';
@@ -20,7 +20,12 @@ export default function UserFeedPage() {
   const loadData = async () => {
     try {
       const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/${title}`
+      await getAccessToken()
+      const access_token = localStorage.getItem("access_token")
       const res = await fetch(backend_url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`
+        },
         method: "GET"
       });
       let resJson = await res.json();
