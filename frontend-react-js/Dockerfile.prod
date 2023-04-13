@@ -20,8 +20,7 @@ WORKDIR /frontend-react-js
 COPY package.json .
 COPY package-lock.json .
 COPY . /frontend-react-js
-# RUN npm ci --production
-RUN npm install
+RUN npm ci
 RUN npm run build
 
 FROM 924351343865.dkr.ecr.us-east-1.amazonaws.com/cruddur-nginx:1.23.4-alpine3.17 as prod
