@@ -6,18 +6,6 @@ NO_COLOR='\033[0m'
 LABEL="db-setup"
 printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
-# bin_path="$(realpath .)/bin"
-
-
-# source "$bin_path/db/drop"
-# sleep 2
-# source "$bin_path/db/create"
-# sleep 2
-# source "$bin_path/db/schema-load"
-# sleep 2
-# source "$bin_path/db/seed"
-
-
 ABS_PATH=$(readlink -f "$0")
 DB_PATH=$(dirname $ABS_PATH)
 
@@ -25,6 +13,6 @@ source "$DB_PATH/drop"
 source "$DB_PATH/create"
 source "$DB_PATH/schema-load"
 source "$DB_PATH/seed"
-# python "$DB_PATH/update_cognito_user_ids"
+python "$DB_PATH/update_cognito_user_ids"
 
 
