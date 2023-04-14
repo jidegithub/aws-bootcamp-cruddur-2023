@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
@@ -7,10 +8,13 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     super(scope, id, props);
 
     // The code that defines your stack goes here
+    const bucketName: string = process.env.THUMBING_BUCKET_NAME as string;
+  }
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'ThumbingServerlessCdkQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+  createBucket(bucketName: string){
+    const bucket = new s3.Bucket(this, 'ThumbingBucket', {
+      bucketName: bucketName,
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
   }
 }
