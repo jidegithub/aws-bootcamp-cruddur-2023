@@ -7,7 +7,6 @@ export function format_datetime(value) {
 }
 
 export function message_time_ago(value){
-  console.log(value)
   const datetime = DateTime.fromISO(value, { zone: 'utc' })
   const created = datetime.setZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
   const now     = DateTime.now()
@@ -32,9 +31,8 @@ export function time_ago(value){
   const future = datetime.setZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
   const now     = DateTime.now()
   const diff_mins = now.diff(future, 'minutes').toObject().minutes;
-  const diff_hours = now.diff(future, 'hours').toObject().hours;
-  const diff_days = now.diff(future, 'days').toObject().days;
-
+  const diff_hours = future.diff(now, 'hours').toObject().hours;
+  const diff_days = future.diff(now, 'days').toObject().days;
   if (diff_hours > 24.0){
     return `${Math.floor(diff_days)}d`;
   } else if (diff_hours < 24.0 && diff_hours > 1.0) {

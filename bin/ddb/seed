@@ -88,7 +88,7 @@ def create_message(client,message_group_uuid, created_at, message, my_user_uuid,
   print(response)
 
 
-message_group_uuid = "5ae290ed-55d1-47a0-bc6d-fe2bc2700399" #str(uuid.uuid4())
+message_group_uuid = "f3f0129-9caa-4c29-8d2e-135f546c7bc3" #str(uuid.uuid4())
 now = datetime.now()
 users = get_user_uuids()
 
@@ -232,8 +232,6 @@ for i in range(len(lines)):
   else:
     print(lines[i])
     raise 'invalid line'
-
-  # created_at = (now + timedelta(minutes=i)).isoformat()
 
   created_at = (now - timedelta(days=1) + timedelta(minutes=i)).isoformat()
   create_message(
