@@ -1,12 +1,13 @@
 import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as s3n from 'aws-cdk-lib/aws-s3'
 import { Construct } from 'constructs';
 // import * as dotenv from 'dotenv';
 const dotenv = require('dotenv');
 
 //load env variables
-dotenv.config({path:'./example.env'})
+dotenv.config()
 
 export class ThumbingServerlessCdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -27,7 +28,10 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     
     // The code that defines your stack goes here
     const bucket = this.createBucket(bucketName)
+    // const bucket = this.importBucket(bucketName)
     const lambda = this.createLambda(functionPath, bucketName, folderInput, folderOutput)
+
+    const s3NotifyToLambda = this.createS3NotifyToLambda(folderInput, lambda, bucket)
   }
 
   createBucket(bucketName: string): s3.IBucket {
@@ -36,6 +40,11 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
       bucketName: bucketName,
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
+    return bucket;
+  }
+
+  importBucket(bucketName: string): s3.IBucket {
+    const bucket =  s3.Bucket.fromBucketName(this, 'ThumbingBucket', bucketName)
     return bucket;
   }
 
@@ -53,5 +62,14 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
       }
     });
     return lambdaFunction;
+  }
+
+  createS3NotifyToLambda(prefix: string, lambda: lambda.IFunction, bucket: s3.IBucket): void {
+    const destination = new s3n.LambdaDestination(lambda);
+    bucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED_PUT,
+      destination,
+      {prefix: prefix} // folder to contain the original images
+    )
   }
 }
