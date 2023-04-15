@@ -37,6 +37,11 @@ tasks:
       npm install aws-cdk -g
     command: |
       cd thumbing-serverless-cdk
+      cp example.env .env
+      npm i
+  - name: process-images
+    before: |
+      cd aws/lambdas/process-images
       npm i
 vscode:
   extensions:
