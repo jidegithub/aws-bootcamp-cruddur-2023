@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as s3n from 'aws-cdk-lib/aws-s3'
+import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
 import { Construct } from 'constructs';
 // import * as dotenv from 'dotenv';
 const dotenv = require('dotenv');
@@ -27,8 +27,9 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     console.log('functionPath',functionPath)
     
     // The code that defines your stack goes here
-    const bucket = this.createBucket(bucketName)
-    // const bucket = this.importBucket(bucketName)
+    // const bucket = this.createBucket(bucketName)
+    // importing an existing bucket this way means the bucket doesn't get on cdk destroy
+    const bucket = this.importBucket(bucketName)
     const lambda = this.createLambda(functionPath, bucketName, folderInput, folderOutput)
 
     const s3NotifyToLambda = this.createS3NotifyToLambda(folderInput, lambda, bucket)
