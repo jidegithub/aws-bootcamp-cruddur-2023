@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 // import * as dotenv from 'dotenv';
 const dotenv = require('dotenv');
@@ -32,7 +33,11 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     const bucket = this.importBucket(bucketName)
     const lambda = this.createLambda(functionPath, bucketName, folderInput, folderOutput)
 
-    const s3NotifyToLambda = this.createS3NotifyToLambda(folderInput, lambda, bucket)
+    this.createS3NotifyToLambda(folderInput, lambda, bucket)
+
+    const s3ReadWritePolicy = this.createPolicyBucketAccess(bucket.bucketArn)
+
+    lambda.addToRolePolicy(s3ReadWritePolicy);
   }
 
   createBucket(bucketName: string): s3.IBucket {
@@ -51,8 +56,8 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
 
   createLambda(functionPath: string, bucketName: string, folderInput: string, folderOutput: string): lambda.IFunction {
     const lambdaFunction = new lambda.Function(this, 'ThumbLambda', {
-      runtime: lambda.Runtime.NODEJS_16_X,
-      handler: 'index.handle',
+      runtime: lambda.Runtime.NODEJS_18_X,
+      handler: 'index.handler',
       code: lambda.Code.fromAsset(functionPath),
       environment: {
         DEST_BUCKET_NAME: bucketName,
@@ -72,5 +77,18 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
       destination,
       {prefix: prefix} // folder to contain the original images
     )
+  }
+
+  createPolicyBucketAccess(bucketArn: string){
+    const s3ReadWritePolicy = new iam.PolicyStatement({
+      actions: [
+        's3:GetObject',
+        's3:PutObject',
+      ],
+      resources: [
+        `${bucketArn}/*`,
+      ]
+    });
+    return s3ReadWritePolicy;
   }
 }

@@ -37,7 +37,7 @@ tasks:
       npm install aws-cdk -g
     command: |
       cd thumbing-serverless-cdk
-      cp example.env .env
+      cp .env.example .env
       npm i
   - name: process-images
     before: |
