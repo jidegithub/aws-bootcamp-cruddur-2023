@@ -1,4 +1,5 @@
 const process = require('process');
+const path =  require('path');
 const {getClient, getOriginalImage, processImage, uploadProcessedImage} = require('./s3-image-processing.js')
 
 const bucketName = process.env.DEST_BUCKET_NAME
@@ -18,7 +19,9 @@ exports.handler = async (event) => {
   console.log('srcKey',srcKey)
 
   const dstBucket = bucketName;
-  const dstKey = srcKey.replace(folderInput,folderOutput)
+
+  const filename = path.parse(srcKey).name
+  const dstKey = `${folderOutput}/${filename}.jpg`
   console.log('dstBucket',dstBucket)
   console.log('dstKey',dstKey)
 
