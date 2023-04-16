@@ -59,6 +59,7 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'index.handler',
       code: lambda.Code.fromAsset(functionPath),
+      timeout: cdk.Duration.seconds(15),
       environment: {
         DEST_BUCKET_NAME: bucketName,
         FOLDER_INPUT: folderInput,
