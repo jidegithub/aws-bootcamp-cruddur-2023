@@ -11,3 +11,23 @@ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -;
 sudo apt-get update -y;
 sudo apt install -y postgresql-client-13 libpq-dev
+
+#process-images
+cd /workspaces/aws-bootcamp-cruddur-2023/aws/lambdas/process-images;
+source /workspaces/aws-bootcamp-cruddur-2023/bin/avatar/sharp
+
+#aws CDK utils
+npm install aws-cdk -g
+cd /workspaces/aws-bootcamp-cruddur-2023/thumbing-serverless-cdk;
+cp .env.example .env
+npm i
+
+# AWS set current space ip address and update rds security group rule
+export ENVIRONMENT_IP=$(curl ifconfig.me)
+source /workspaces/aws-bootcamp-cruddur-2023/bin/rds/update-sg-rule
+
+#generate env for Frontend Reactjs
+source /workspaces/aws-bootcamp-cruddur-2023/bin/frontend/generate-env
+
+#generate env for Backend Flask
+source /workspaces/aws-bootcamp-cruddur-2023/bin/backend/generate-env
