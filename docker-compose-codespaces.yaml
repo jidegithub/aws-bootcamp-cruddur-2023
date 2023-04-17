@@ -23,8 +23,7 @@ services:
       - frontend-react-js.env
     build: 
       context: ./frontend-react-js
-      target: prod
-      dockerfile: Dockerfile.prod
+      target: base
     ports:
       - "3000:3000"
     networks:
