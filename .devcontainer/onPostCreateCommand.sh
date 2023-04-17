@@ -4,6 +4,12 @@
 export ENVIRONMENT_IP=$(curl ifconfig.me)
 source "/workspaces/aws-bootcamp-cruddur-2023/bin/rds/update-sg-rule"
 
+#generate env for Frontend Reactjs
+source /workspaces/aws-bootcamp-cruddur-2023/bin/frontend/generate-env
+
+#generate env for Backend Flask
+source /workspaces/aws-bootcamp-cruddur-2023/bin/backend/generate-env
+
 #fargate task utils
 curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
 sudo dpkg -i session-manager-plugin.deb
@@ -16,4 +22,4 @@ npm i
 
 #process-images
 cd /workspaces/aws-bootcamp-cruddur-2023/aws/lambdas/process-images;
-source "/workspaces/aws-bootcamp-cruddur-2023/bin/avatar/sharp"
+source /workspaces/aws-bootcamp-cruddur-2023/bin/avatar/sharp
