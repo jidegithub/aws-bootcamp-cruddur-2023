@@ -2,3 +2,6 @@ docker/dynamodb/shared-local-instance.db
 backend-node/node_modules
 .env.local
 jwt-authorizer-api/node_modules
+frontend-react-js.env
+backend-flask.env
+session-manager-plugin.deb
