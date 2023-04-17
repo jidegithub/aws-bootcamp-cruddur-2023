@@ -18,6 +18,10 @@ import {
 
 const router = createBrowserRouter([
   {
+    path: "@/:handle",
+    element: <UserFeedPage />
+  },
+  {
     path: "/",
     element: <HomeFeedPage />
   },
@@ -25,10 +29,7 @@ const router = createBrowserRouter([
     path: "/notifications",
     element: <NotificationsFeedPage />
   },
-  {
-    path: "/@:handle",
-    element: <UserFeedPage />
-  },
+  
   {
     path: "/messages",
     element: <MessageGroupsPage />

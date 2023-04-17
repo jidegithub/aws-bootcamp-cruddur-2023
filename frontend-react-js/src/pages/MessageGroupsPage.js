@@ -7,7 +7,7 @@ import MessageGroupFeed from '../components/MessageGroupFeed';
 
 export default function MessageGroupsPage() {
   const [messageGroups, setMessageGroups] = React.useState([]);
-  const [popped, setPopped] = React.useState([]);
+  const [setPopped] = React.useState([]);
   const [user, setUser] = React.useState(null);
   const dataFetchedRef = React.useRef(false);
 
