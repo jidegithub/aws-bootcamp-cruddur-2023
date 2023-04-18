@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
+cd /workspaces/aws-bootcamp-cruddur-2023
+
 #generate env for Frontend Reactjs
-source ./bin/frontend/generate_env
+./bin/frontend/generate_env
 
 #generate env for Backend Flask
-source ./bin/backend/generate_env
+./bin/backend/generate_env
 
 #ecr login
 source ./bin/ecr/login
