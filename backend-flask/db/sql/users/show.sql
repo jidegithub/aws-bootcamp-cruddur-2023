@@ -6,6 +6,7 @@ SELECT
 			users.handle,
 			users.display_name,
 			users.bio,
+			users.cognito_user_id as cognito_user_uuid,
 			(
 				SELECT 
 					count(true) 
