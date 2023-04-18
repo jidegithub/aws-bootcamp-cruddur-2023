@@ -16,6 +16,7 @@ from services.messages import *
 from services.create_message import *
 from services.show_activity import *
 from services.users_short import *
+from services.update_profile import *
 from services.tracing.honeycomb import init_honeycomb
 
 # RollBar Service
@@ -137,6 +138,27 @@ def data_home(cognito_user_id):
   app.logger.info("request header from app")
   data = HomeActivities.run(cognito_user_id)
   return data, 200
+
+@app.route("/api/profile/update", methods=['POST','OPTIONS'])
+@cross_origin()
+@CognitoJwtTokenMiddleware
+def data_update_profile(cognito_user_id):
+  bio          = request.json.get('bio',None)
+  display_name = request.json.get('display_name',None)
+  try:
+    model = UpdateProfile.run(
+      cognito_user_id=cognito_user_id,
+      bio=bio,
+      display_name=display_name
+    )
+    if model['errors'] is not None:
+      return model['errors'], 422
+    else:
+      return model['data'], 200
+  except Exception as e:
+    # unautheticated request
+    app.logger.debug(e)
+    return {}, 401
 
 @app.route("/api/activities/notifications", methods=['GET'])
 def data_notifications():
