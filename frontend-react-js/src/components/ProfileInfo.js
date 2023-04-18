@@ -2,6 +2,7 @@ import './ProfileInfo.css';
 import {ReactComponent as ElipsesIcon} from './svg/elipses.svg';
 import React from "react";
 
+// [TODO] Authenication
 import { Auth } from 'aws-amplify';
 
 export default function ProfileInfo(props) {
@@ -13,9 +14,9 @@ export default function ProfileInfo(props) {
 
   const signOut = async () => {
     try {
-      await Auth.signOut({ global: true });
-      window.location.href = "/"
-      localStorage.removeItem("access_token")
+        await Auth.signOut({ global: true });
+        window.location.href = "/"
+        localStorage.removeItem("access_token")
     } catch (error) {
         console.log('error signing out: ', error);
     }
