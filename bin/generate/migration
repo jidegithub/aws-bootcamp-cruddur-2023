@@ -17,7 +17,7 @@ filename = f"{timestamp}_{name}.py"
 klass = name.replace('_', ' ').title().replace(' ','')
 
 file_content = f"""
-from lib.db import db
+from lib.db_local import db
 
 class {klass}Migration:
   def migrate_sql():

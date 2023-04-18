@@ -1,12 +1,14 @@
-from lib.db import db
+from lib.db_local import db
 
 class AddBioColumnMigration:
   def migrate_sql():
     data = """
+      ALTER TABLE public.users ADD COLUMN bio text;
     """
     return data
   def rollback_sql():
     data = """
+      ALTER TABLE public.users DROP COLUMN bio;
     """
     return data
   def migrate():

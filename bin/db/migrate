@@ -10,16 +10,13 @@ import importlib
 current_path = os.path.dirname(os.path.abspath(__file__))
 parent_path = os.path.abspath(os.path.join(current_path, '..', '..','backend-flask'))
 sys.path.append(parent_path)
-from lib.db import db
+from lib.db_local import db
 
 def get_last_successful_run():
   sql = """
-  SELECT
-      coalesce(
-      (SELECT last_successful_run
-      FROM public.schema_information
-      LIMIT 1),
-      '000') as last_succesful_run
+    SELECT last_successful_run
+    FROM public.schema_information
+    LIMIT 1
   """
   return int(db.query_value(sql,{},verbose=False))
 
@@ -27,6 +24,7 @@ def set_last_successful_run(value):
   sql = """
   UPDATE schema_information
   SET last_successful_run = %(last_successful_run)s
+  WHERE id = 1
   """
   db.query_commit(sql,{'last_successful_run': value})
   return value
