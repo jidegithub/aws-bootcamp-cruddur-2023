@@ -13,7 +13,7 @@ def handler(event:, context:)
 	{ 
       headers: {
         "Access-Control-Allow-Headers": "*, Authorization",
-        "Access-Control-Allow-Origin": "https://jidegithub-fantastic-giggle-g7qrxgj55rgh9r77-4567.preview.app.github.dev",
+        "Access-Control-Allow-Origin": "https://jidegithub-fantastic-giggle-g7qrxgj55rgh9r77-3000.preview.app.github.dev",
         "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
       },
       statusCode: 200,
