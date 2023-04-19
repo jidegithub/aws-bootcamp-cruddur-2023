@@ -2,7 +2,7 @@ import './ProfileForm.css';
 import React from "react";
 import process from 'process';
 import {getAccessToken} from 'utils/CheckAuth';
-import { S3Client } from '@aws-sdk/client-s3';
+// import { S3Client } from '@aws-sdk/client-s3';
 
 export default function ProfileForm(props) {
   const [bio, setBio] = React.useState(0);
@@ -15,7 +15,30 @@ export default function ProfileForm(props) {
   }, [props.profile])
 
   const s3Upload = async(event) => {
-    const client = new S3Client();
+    try {
+      console.log("s3Upload")
+      const backend_url = "https://1vn0c5humj.execute-api.us-east-1.amazonaws.com/avatars/key_upload"
+      await getAccessToken()
+      const access_token = localStorage.getItem("access_token")
+      const res = await fetch(backend_url, {
+        method: "POST",
+        headers: {
+          'Origin': 'https://jidegithub-fantastic-giggle-g7qrxgj55rgh9r77-3000.preview.app.github.dev',
+          'Authorization': `Bearer ${access_token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      let data = await res.json();
+      if (res.status === 200) {
+       console.log("presigned url",data)
+        props.setPopped(false)
+      } else {
+        console.log(res)
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const onsubmit = async (event) => {
@@ -78,7 +101,11 @@ export default function ProfileForm(props) {
             </div>
           </div>
           <div className="popup_content">
-            <input type="file" name="avatarupload" onChange={s3Upload} />
+
+            <div className="upload" style={{ background: "red"}} onClick={s3Upload}>
+              upload avatar
+            </div>
+            <input type="file" name="avatarupload" />
             <div className="field display_name">
               <label>Display Name</label>
               <input
