@@ -2,7 +2,6 @@ import './ProfileForm.css';
 import React from "react";
 import process from 'process';
 import {getAccessToken} from 'utils/CheckAuth';
-// import { S3Client } from '@aws-sdk/client-s3';
 
 export default function ProfileForm(props) {
   const [bio, setBio] = React.useState('');
@@ -42,6 +41,7 @@ export default function ProfileForm(props) {
       console.log(err);
     }
   }
+
   const s3upload = async (event)=> {
     console.log('event',event)
     const file = event.target.files[0]
@@ -51,11 +51,12 @@ export default function ProfileForm(props) {
     const preview_image_url = URL.createObjectURL(file)
     console.log(filename,size,type)
     const fileparts = filename.split('.')
-    const extension = fileparts[fileparts.length-1]
+    const extension = fileparts[fileparts.length - 1]
     const presignedurl = await s3uploadkey(extension)
+
     try {
       console.log('s3upload')
-      console.log("presignedurl:", presignedurl)
+      // console.log("presignedurl:", presignedurl)
       const res = await fetch(presignedurl, {
         method: "PUT",
         body: file,

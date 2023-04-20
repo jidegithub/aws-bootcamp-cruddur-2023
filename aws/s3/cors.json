@@ -7,7 +7,8 @@
           "PUT"
       ],
       "AllowedOrigins": [
-          "https://*.gitpod.io"
+          "https://*.gitpod.io",
+          "https://*.github.dev"
       ],
       "ExposeHeaders": [
           "x-amz-server-side-encryption",

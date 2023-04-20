@@ -1,8 +1,7 @@
 import './ProfileAvatar.css';
 
 export default function ProfileAvatar(props) {
-  // const backgroundImage = `url("https://assets.jidecruddur.site/avatars/${props.id}.jpg")`;
-  const backgroundImage = `url("https://picsum.photos/id/40/200/300")`;
+  const backgroundImage = `url("https://d14trefe5nds05.cloudfront.net/avatars/processed/${props.id}.jpg")`;
   const styles = {
     backgroundImage: backgroundImage,
     backgroundSize: 'cover',
