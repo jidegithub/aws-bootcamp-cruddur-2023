@@ -9,7 +9,6 @@ export default function ProfileForm(props) {
   const [displayName, setDisplayName] = React.useState(0);
 
   React.useEffect(()=>{
-    console.log('useEffects',props)
     setBio(props.profile.bio);
     setDisplayName(props.profile.display_name);
   }, [props.profile])
@@ -56,6 +55,7 @@ export default function ProfileForm(props) {
     const presignedurl = await s3uploadkey(extension)
     try {
       console.log('s3upload')
+      console.log("presignedurl:", presignedurl)
       const res = await fetch(presignedurl, {
         method: "PUT",
         body: file,

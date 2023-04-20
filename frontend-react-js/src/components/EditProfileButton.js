@@ -3,7 +3,6 @@ import './EditProfileButton.css';
 export default function EditProfileButton(props) {
   const pop_profile_form = (event) => {
     event.preventDefault();
-    console.log('pop profile form')
     props.setPopped(true);
     return false;
   }
