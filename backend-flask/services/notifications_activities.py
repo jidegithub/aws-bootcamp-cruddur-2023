@@ -2,8 +2,6 @@ from datetime import datetime, timedelta, timezone
 from opentelemetry import trace
 import logging
 
-#Xray
-from aws_xray_sdk.core import xray_recorder
 # Honeycomb
 tracer = trace.get_tracer("api.notifications.activities")
 #Logging
@@ -21,7 +19,6 @@ class NotificationsActivities:
       span.set_attribute("app.received.date", f"{now.isoformat()}")
       span.set_attribute("app.now", now.isoformat())
 
-    with xray_recorder.capture("api_notifications_activities_run") as subsegment:
       span = trace.get_current_span()  
       now = datetime.now(timezone.utc).astimezone()
 
@@ -48,7 +45,5 @@ class NotificationsActivities:
       ]
 
       span.set_attribute("app.result_length", len(results))
-      subsegment.put_metadata("app.result_length", len(results))
-    logger.info(f"Notification activities result: {results}")
 
     return results

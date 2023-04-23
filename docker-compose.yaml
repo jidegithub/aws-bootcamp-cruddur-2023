@@ -1,29 +1,17 @@
 version: "3.8"
 services:
   backend-flask:
-    environment:
-      FRONTEND_URL: "${FRONTEND_URL}"
-      BACKEND_URL: "${BACKEND_URL}"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
-      OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY_BACKEND}"
-      OTEL_SERVICE_NAME: "cruddur-backend-flask"
-      ROLLBAR_ACCESS_TOKEN: "${ROLLBAR_ACCESS_TOKEN}"
-      AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
-      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
-      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
-      AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}*"
-      # AWS_DYNAMODB_ENDPOINT: "http://dynamodb-local:8000"
-      AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
-      AWS_COGNITO_USER_POOL_ID: "us-east-1_FzCLtlpCB"
-      AWS_COGNITO_USER_POOL_CLIENT_ID: "donfgu4tefui9tfb7nn2va1bv"
-      #CONNECTION_URL: "${PROD_CONNECTION_URL}"
-      CONNECTION_URL: postgresql://postgres:password@db:5432/cruddur
-    build: ./backend-flask
+    env_file:
+      - backend-flask.env
+    build:
+      context: ./backend-flask
+      dockerfile: Dockerfile.prod
     ports:
       - "4567:4567"
+    networks:
+      - cruddur-net
     healthcheck:
       test: curl --fail http://localhost:4567 || exit 1
-      # test: ["CMD-SHELL", "curl -f http://127.0.0.1:4567/api/health && echo 'OK' || exit 1"]
       interval: 60s
       retries: 3
       start_period: 20s
@@ -31,21 +19,17 @@ services:
     volumes:
       - ./backend-flask:/backend-flask
   frontend-react-js:
-    environment:
-      REACT_APP_BACKEND_URL: "${REACT_APP_BACKEND_URL}"
-      REACT_APP_AWS_USER_POOL_ID: "us-east-1_FzCLtlpCB"
-      REACT_APP_AWS_PROJECT_REGION: "${AWS_DEFAULT_REGION}"
-      REACT_APP_CLIENT_ID: "donfgu4tefui9tfb7nn2va1bv"
-      REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}"
+    env_file:
+      - frontend-react-js.env
     build: 
       context: ./frontend-react-js
-      target: build
+      target: base
     ports:
       - "3000:3000"
+    networks:
+      - cruddur-net
     volumes:
       - ./frontend-react-js:/frontend-react-js
-    depends_on:
-      - backend-flask
   dynamodb-local:
     user: root
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
@@ -53,6 +37,8 @@ services:
     container_name: dynamodb-local
     ports:
       - "8000:8000"
+    networks:
+      - cruddur-net
     volumes:
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
@@ -64,6 +50,8 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - '5432:5432'
+    networks:
+      - cruddur-net
     volumes: 
       - db:/var/lib/postgresql/data
   xray-daemon:
@@ -76,29 +64,8 @@ services:
       - "xray -o -b xray-daemon:2000"
     ports:
       - 2000:2000/udp
-  envoy-proxy:
-    image: envoyproxy/envoy-alpine:latest
-    build: 
-      context: envoy/
-      dockerfile: Dockerfile
-    ports:
-    - "8080:8080"
-    volumes:
-    - ./envoy/envoy-cognito.yaml:/etc/front-envoy.yaml 
-    environment:
-    - loglevel=debug
-  jwt-authorizer:
-    build:
-      context: ./jwt-authorizer-api/
-    ports:
-      - 3002:3002
-    volumes:
-      - ./jwt-authorizer-api/:/app
-    environment:
-      loglevel: debug
-      AWS_COGNITO_USER_POOL_ID: "${REACT_APP_AWS_USER_POOL_ID}"
-      AWS_COGNITO_USER_POOL_CLIENT_ID: "${REACT_APP_CLIENT_ID}"
-
+    networks:
+      - cruddur-net
 volumes:
   db:
     driver: local
@@ -107,6 +74,6 @@ volumes:
 # the name flag is a hack to change the default prepend folder
 # name when outputting the image names
 networks: 
-  internal-network:
+  cruddur-net:
     driver: bridge
-    name: cruddur
+    name: cruddur-net

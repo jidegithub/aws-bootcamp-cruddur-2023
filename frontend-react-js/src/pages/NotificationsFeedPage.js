@@ -1,6 +1,6 @@
 import './NotificationsFeedPage.css';
 import React from "react";
-import checkAuth from '../utils/CheckAuth'
+import {checkAuth, getAccessToken} from '../utils/CheckAuth';
 
 
 import DesktopNavigation  from '../components/DesktopNavigation';
@@ -21,7 +21,12 @@ export default function NotificationsFeedPage() {
   const loadData = async () => {
     try {
       const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/notifications`
+      await getAccessToken()
+      const access_token = localStorage.getItem("access_token")
       const res = await fetch(backend_url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`
+        },
         method: "GET"
       });
       let resJson = await res.json();

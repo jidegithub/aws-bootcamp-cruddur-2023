@@ -21,10 +21,10 @@ export default function SigninPage() {
           window.location.href = "/"
         })
         .catch(err => { 
-          if (err.code == 'NotAuthorizedException') {
+          if (err.code === 'NotAuthorizedException') {
             setErrors(err.message)
           }
-          else if (err.code == 'UserNotConfirmedException') {
+          else if (err.code === 'UserNotConfirmedException') {
             window.location.href = "/confirm"
           }
           setErrors(err.message)

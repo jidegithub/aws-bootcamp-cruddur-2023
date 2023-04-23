@@ -1,4 +1,4 @@
-FROM node:16-alpine3.16 as build
+FROM node:16-alpine3.16 as base
 
 ENV PATH /app/node_modules/.bin:$PATH
 ENV PORT=3000

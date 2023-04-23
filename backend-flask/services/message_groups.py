@@ -1,5 +1,6 @@
 from lib.db import db
 from lib.ddb import Ddb
+
 class MessageGroups:
   def run(cognito_user_id):
     model = {

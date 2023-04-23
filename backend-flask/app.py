@@ -16,21 +16,13 @@ from services.messages import *
 from services.create_message import *
 from services.show_activity import *
 from services.users_short import *
+from services.update_profile import *
 from services.tracing.honeycomb import init_honeycomb
-from services.tracing.aws_xray import init_xray
 
 # RollBar Service
 from services.rollbar import init_rollbar, rollbar
 # AWS token verifier
 from middleware.cognito_jwt_token_middleware import CognitoJwtTokenMiddleware
-
-# HoneyComb
-from opentelemetry import trace
-from opentelemetry.instrumentation.flask import FlaskInstrumentor
-from opentelemetry.instrumentation.requests import RequestsInstrumentor
-from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 # CLOUDWATCH Logs
 from services.logging.logger import setup_logger
@@ -39,18 +31,14 @@ logger = logging.getLogger("cruddur-backend-flask")
 
 app = Flask(__name__)
 
-# X_RAY
-# instrument with xray
-init_xray(app)
- 
 # HoneyComb
 # Initialize automatic instrumentation with Flask
 init_honeycomb(app)
 
 frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
-nodend = os.getenv('NODE_URL')
-origins = [frontend, backend, nodend]
+
+origins = [frontend, backend]
 cors = CORS(
   app, 
   resources={r"/api/*": {"origins": origins}},
@@ -69,30 +57,27 @@ def rollbar_test():
     return "Hello World!"
 
 @app.route("/api/message_groups", methods=['GET'])
-def data_message_groups():
-  access_token = extract_access_token(request.headers)
+@CognitoJwtTokenMiddleware
+def data_message_groups(cognito_user_id):
   logger.info("message group request is received")
+  logger.info(cognito_user_id)
   try:
-    claims = cognito_jwt_token.verify(access_token)
-    cognito_user_id = claims['sub']
     model = MessageGroups.run(cognito_user_id=cognito_user_id)
     if model['errors'] is not None:
       return model['errors'], 422
     else:
       return model['data'], 200
-      
-  except TokenVerifyError as e:
+  except Exception as e:
     app.logger.debug(e)
     return {}, 401
 
 @app.route("/api/messages/<string:message_group_uuid>", methods=['GET'])
-def data_messages(message_group_uuid):
+@CognitoJwtTokenMiddleware
+def data_messages(cognito_user_id, message_group_uuid):
   user_sender_handle = 'grahams'
   user_receiver_handle = request.args.get('user_reciever_handle')
-  access_token = extract_access_token(request.headers)
+  # message_group_uuid   = request.json.get('message_group_uuid',None)
   try:
-    claims = cognito_jwt_token.verify(access_token)
-    cognito_user_id = claims['sub']
     model = Messages.run(
       message_group_uuid=message_group_uuid,
       cognito_user_id=cognito_user_id
@@ -101,48 +86,15 @@ def data_messages(message_group_uuid):
       return model['errors'], 422
     else:
       return model['data'], 200
-  except TokenVerifyError as e:
+  except Exception as e:
     app.logger.debug(e)
     return {}, 401
 
 @app.route("/api/messages", methods=['POST','OPTIONS'])
 @cross_origin()
-def data_create_message():
-<<<<<<< HEAD
-  user_sender_handle = 'andrewbrown'
-  user_receiver_handle = request.json['user_receiver_handle']
-  message = request.json['message']
-
-  model = CreateMessage.run(message=message,user_sender_handle=user_sender_handle,user_receiver_handle=user_receiver_handle)
-  if model['errors'] is not None:
-    return model['errors'], 422
-  else:
-    return model['data'], 200
-  return
-
-@app.route("/api/activities/home", methods=['GET'])
-def data_home():
-  token = request.headers.get("Authorization")
-  # try:
-  #   claims = cognito_jwt_token.verify(access_token)
-  #   # authenticated request
-  #   app.logger.debug("authenticated")
-  #   app.logger.debug(claims)
-  #   app.logger.debug(claims['username'])
-  #   data = HomeActivities.run(cognito_user_id=claims['username'])
-  # except TokenVerifyError as e:
-  #   # unauthenticated request
-  #   app.logger.debug(e)
-  #   app.logger.debug("unauthenticated")
-  data = HomeActivities.run()
-  verify_token(token)
-=======
-  access_token = extract_access_token(request.headers)
+@CognitoJwtTokenMiddleware
+def data_create_message(cognito_user_id):
   try:
-    claims = cognito_jwt_token.verify(access_token)
-    # authenticated request
-    app.logger.debug("authenticated")
-    cognito_user_id = claims['sub']
     message = request.json['message']
 
     print("Request", dict(request.json), flush=True)
@@ -174,7 +126,7 @@ def data_home():
       return model['errors'], 422
     else:
       return model['data'], 200
-  except TokenVerifyError as e:
+  except Exception as e:
     # unauthenticated request
     app.logger.debug(e)
     app.logger.debug("unauthenticated")
@@ -182,12 +134,31 @@ def data_home():
 
 @app.route("/api/activities/home", methods=['GET'])
 @CognitoJwtTokenMiddleware
-def data_home(user):
+def data_home(cognito_user_id):
   app.logger.info("request header from app")
-  # app.logger.info(request.headers)
-  data = HomeActivities.run(user)
->>>>>>> journal
+  data = HomeActivities.run(cognito_user_id)
   return data, 200
+
+@app.route("/api/profile/update", methods=['POST','OPTIONS'])
+@cross_origin()
+@CognitoJwtTokenMiddleware
+def data_update_profile(cognito_user_id):
+  bio          = request.json.get('bio',None)
+  display_name = request.json.get('display_name',None)
+  try:
+    model = UpdateProfile.run(
+      cognito_user_id=cognito_user_id,
+      bio=bio,
+      display_name=display_name
+    )
+    if model['errors'] is not None:
+      return model['errors'], 422
+    else:
+      return model['data'], 200
+  except Exception as e:
+    # unautheticated request
+    app.logger.debug(e)
+    return {}, 401
 
 @app.route("/api/activities/notifications", methods=['GET'])
 def data_notifications():
@@ -200,7 +171,6 @@ def data_users_short(handle):
   return data, 200
 
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
-#@xray_recorder.capture('activities_users')
 def data_handle(handle):
   model = UserActivities.run(handle)
   if model['errors'] is not None:
@@ -216,7 +186,6 @@ def data_search():
     return model['errors'], 422
   else:
     return model['data'], 200
-  return
 
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
@@ -229,7 +198,6 @@ def data_activities():
     return model['errors'], 422
   else:
     return model['data'], 200
-  return
 
 @app.route("/api/activities/<string:activity_uuid>", methods=['GET'])
 def data_show_activity(activity_uuid):
@@ -248,17 +216,17 @@ def data_activities_reply(activity_uuid):
   else:
     return model['data'], 200
 
-@app.route("/api/health", methods=["GET"])
-def health():
+@app.route("/api/health-check", methods=["GET"])
+def health_check():
   logger.info("health request received")
   data = {"success": True, "message": "healthy"}
   return data, 200
 
-@app.after_request
-def after_request(response):
-  timestamp = strftime('[%Y-%b-%d %H:%M]')
-  logger.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
-  return response
+# @app.after_request
+# def after_request(response):
+#   timestamp = strftime('[%Y-%b-%d %H:%M]')
+#   logger.info('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+#   return response
 
 if __name__ == "__main__":
   app.run(debug=True)

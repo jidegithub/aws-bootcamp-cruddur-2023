@@ -15,6 +15,13 @@ class FlaskAWSCognitoError(Exception):
 class TokenVerifyError(Exception):
   pass
 
+# def extract_access_token(request_headers):
+#     access_token = None
+#     auth_header = request_headers.get("Authorization")
+#     if auth_header and " " in auth_header:
+#         _, access_token = auth_header.split()
+#     return access_token
+
 class CognitoJwtToken:
     def __init__(self, user_pool_id, user_pool_client_id, region, request_client=None):
         self.region = region
@@ -128,16 +135,15 @@ cognito_jwt_token = CognitoJwtToken(
 def CognitoJwtTokenMiddleware(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = None
         claims = None
+        cognito_user_id = None
         if "Authorization" in request.headers:
-            token = request.headers["Authorization"].split(" ")[1]
-        try:
-            access_token = cognito_jwt_token.extract_access_token(request.headers)
-            claims = cognito_jwt_token.verify(access_token)
-            print('authenticated', flush=True)
-        except TokenVerifyError as e:
-            print('unauthenticated', file=sys.stderr)
-        return f(claims, *args, **kwargs)
-
+            try:
+                access_token = cognito_jwt_token.extract_access_token(request.headers)
+                claims = cognito_jwt_token.verify(access_token)
+                cognito_user_id = claims['sub']
+                print('authenticated', flush=True)
+            except TokenVerifyError:
+                print('unauthenticated', file=sys.stderr)
+            return f(cognito_user_id, *args, **kwargs)
     return decorated

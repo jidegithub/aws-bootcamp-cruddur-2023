@@ -30,7 +30,6 @@ export default function SignupPage() {
               enabled: true,
           }
         });
-        console.log(user);
         window.location.href = `/confirm?email=${email}`
     } catch (error) {
         console.log(error);

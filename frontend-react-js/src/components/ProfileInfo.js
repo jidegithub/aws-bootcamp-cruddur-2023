@@ -1,7 +1,9 @@
 import './ProfileInfo.css';
 import {ReactComponent as ElipsesIcon} from './svg/elipses.svg';
+import ProfileAvatar from 'components/ProfileAvatar'
 import React from "react";
 
+// [TODO] Authenication
 import { Auth } from 'aws-amplify';
 
 export default function ProfileInfo(props) {
@@ -13,9 +15,9 @@ export default function ProfileInfo(props) {
 
   const signOut = async () => {
     try {
-      await Auth.signOut({ global: true });
-      window.location.href = "/"
-      localStorage.removeItem("access_token")
+        await Auth.signOut({ global: true });
+        window.location.href = "/"
+        localStorage.removeItem("access_token")
     } catch (error) {
         console.log('error signing out: ', error);
     }
@@ -35,7 +37,7 @@ export default function ProfileInfo(props) {
         <button onClick={signOut}>Sign Out</button> 
       </div>
       <div className="profile-info" onClick={click_pop}>
-        <div className="profile-avatar"></div>
+        <ProfileAvatar id={props.user.cognito_user_uuid} />
         <div className="profile-desc">
           <div className="profile-display-name">{props.user.display_name || "My Name" }</div>
           <div className="profile-username">@{props.user.handle || "handle"}</div>
