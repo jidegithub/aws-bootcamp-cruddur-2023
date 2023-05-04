@@ -29,9 +29,9 @@ Firstly, manually create a S3 bucket named `assets.<domain_name>` (e.g., `assets
 ![](../_docs/assets/week8/cloudfront-2.png)
 ![](../_docs/assets/week8/cloudfront-3.png)
 
-<!-- # Implement Users Profile Page
+# Implement Users Profile Page
 
-![](../_docs/assets/week8/Monosnap%20Monosnap%202023-04-25%2023-05-30.png)
+![](../_docs/assets/week8/user-profile.png)
 
 # Implement Users Profile Form
 
@@ -40,7 +40,7 @@ Firstly, manually create a S3 bucket named `assets.<domain_name>` (e.g., `assets
 # Implement Backend Migrations
 
 [Backend Migration](../bin/db/migrate)
-![](../_docs/assets/week8/migration.png) -->
+![](../_docs/assets/week8/migration.png)
 
 # Presigned URL generation via Ruby Lambda
 
@@ -62,10 +62,8 @@ Firstly, manually create a S3 bucket named `assets.<domain_name>` (e.g., `assets
 ![](../_docs/assets/week8/lambda-auth-overview.png)
 
 Create HTTP API in API Gateway and attach authorizer
-![](../_docs/assets/week8/api-gateway0.png)
 ![](../_docs/assets/week8/api-gateway1.png)
 ![](../_docs/assets/week8/api-gateway2.png)
-![](../_docs/assets/week8/api-gateway3.png)
 ![](../_docs/assets/week8/api-gateway4.png)
 ![](../_docs/assets/week8/api-gateway5.png)
 ![](../_docs/assets/week8/api-gateway6.png)
