@@ -10,6 +10,7 @@ const dotenv = require('dotenv');
 
 //load env variables
 dotenv.config()
+const oneDayCron = 24 * 60 * 60; // in seconds
 
 export class ThumbingServerlessCdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -55,6 +56,7 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     //create policies
     const s3UploadsReadWritePolicy = this.createPolicyBucketAccess(uploadsBucket.bucketArn);
     const s3AssetsReadWritePolicy = this.createPolicyBucketAccess(assetsBucket.bucketArn);
+    this.createPolicyEmptyBucket(uploadsBucket.bucketArn)
     // const snsPublishPolicy = this.createPolicySnSPublish(snsTopic.topicArn);
 
     //attach policies for permission
@@ -62,12 +64,18 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     lambda.addToRolePolicy(s3AssetsReadWritePolicy);
     // lambda.addToRolePolicy(snsPublishPolicy);
   }
+  
 
   createBucket(bucketName: string): s3.IBucket {
     const logicalName: string = 'UploadsBucket';
     const bucket = new s3.Bucket(this, logicalName, {
       bucketName: bucketName,
       removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
+
+    bucket.addLifecycleRule({
+      expiration: cdk.Duration.seconds(oneDayCron),
+      id: 'EmptyBucket'
     });
     return bucket;
   }
@@ -114,6 +122,18 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
       ]
     });
     return s3ReadWritePolicy;
+  }
+
+  createPolicyEmptyBucket(bucketArn: string){
+    const s3EmptyBucketPolicy = new iam.PolicyStatement({
+      // effect: iam.Effect.ALLOW,
+      actions: ['s3:ListBucket', 's3:DeleteObject'],
+      resources: [`${bucketArn}/*`],
+      conditions: {
+        DateGreaterThan: { 's3:objectCreateTime': new Date(Date.now() - oneDayCron).toISOString() }
+      }
+    });
+    return s3EmptyBucketPolicy;
   }
 
   createSnsTopic(topicName: string): sns.ITopic{
