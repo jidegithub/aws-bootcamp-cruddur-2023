@@ -49,7 +49,8 @@ cors = CORS(
 
 # RollBar init
 if os.getenv("ENABLE_ROLLBAR_LOG") and os.getenv("ENABLE_ROLLBAR_LOG").lower() == "true":
-  init_rollbar(app)
+  with app.app_context():
+    init_rollbar(app)
 
 @app.route('/rollbar/test')
 def rollbar_test():
