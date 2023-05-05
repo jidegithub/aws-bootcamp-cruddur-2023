@@ -47,7 +47,7 @@ Resources:
       InstanceTenancy: default
       Tags:
         - Key: Name
-          Value: Value: !Sub "${AWS::StackName}VPC"
+          Value: !Sub "${AWS::StackName}VPC"
   IGW:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-internetgateway.html
     Type: AWS::EC2::InternetGateway
