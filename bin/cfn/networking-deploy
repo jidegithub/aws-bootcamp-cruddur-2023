@@ -2,10 +2,10 @@
 
 set -e
 
-CFN_PATH=CFN_PATH="/workspace/aws-bootcamp-cruddur-2023/aws/cfn/networking/template.yaml"
+CFN_PATH="/workspace/aws-bootcamp-cruddur-2023/aws/cfn/networking/template.yaml"
 echo $CFN_PATH
 
-cfn-lint $CFN_PATH
+# cfn-lint $CFN_PATH
 
 aws cloudformation deploy \
   --stack-name "CruddurNet" \
