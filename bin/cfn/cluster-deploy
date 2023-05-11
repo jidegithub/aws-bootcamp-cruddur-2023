@@ -2,18 +2,18 @@
 
 set -e
 
-CFN_PATH=CFN_PATH="/workspace/aws-bootcamp-cruddur-2023/aws/cfn/networking/template.yaml"
+CFN_PATH=CFN_PATH="/workspace/aws-bootcamp-cruddur-2023/aws/cfn/cluster/template.yaml"
 echo $CFN_PATH
 
 cfn-lint $CFN_PATH
 
 aws cloudformation deploy \
-  --stack-name "CruddurNet" \
+  --stack-name "CruddurCluster" \
   --s3-bucket $CFN_BUCKET \
   --region $AWS_DEFAULT_REGION \
   --template-file "$CFN_PATH" \
   --no-execute-changeset \
-  --tags group=cruddur-networking \
+  --tags group=cruddur-cluster \
   --capabilities CAPABILITY_NAMED_IAM
 
 
@@ -25,4 +25,3 @@ aws cloudformation deploy \
 #   --no-execute-changeset \
 #   --tags group=cruddur-networking \
 #   --capabilities CAPABILITY_NAMED_IAM
-
