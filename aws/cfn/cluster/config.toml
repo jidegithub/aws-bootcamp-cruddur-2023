@@ -1,0 +1,8 @@
+[deploy]
+bucket = 'jidecruddur-cloudformation'
+region = 'us-east-1'
+stack_name = 'CruddurCluster'
+
+[parameters]
+CertificateArn = 'arn:aws:acm:us-east-1:924351343865:certificate/e68a6f88-91bf-4cb9-8182-68c85c9dee92'
+NetworkingStack = 'CruddurNet'

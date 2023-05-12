@@ -1,4 +1,11 @@
 tasks:
+  - name: cfn
+    before: |
+      pip install cfn-lint
+      cargo install cfn-guard
+      gem install cfn-toml
+      # cp aws/cfn/networking/config.toml.example aws/cfn/networking/config.toml
+      # cp aws/cfn/cluster/config.toml.example aws/cfn/cluster/config.toml
   - name: aws-cli
     env:
       AWS_CLI_AUTO_PROMPT: on-partial

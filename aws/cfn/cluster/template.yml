@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: |
   The networking and cluster configuration to support fargate containers
   - ECS Fargate Cluster
-  - Application Load Balanacer (ALB)
+  - Application Load Balancer (ALB)
     - ipv4 only
     - internet facing
     - certificate attached from Amazon Certification Manager (ACM)
