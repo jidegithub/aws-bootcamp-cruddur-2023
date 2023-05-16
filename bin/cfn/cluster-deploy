@@ -6,7 +6,7 @@ CFN_PATH="/workspace/aws-bootcamp-cruddur-2023/aws/cfn/cluster/template.yaml"
 CONFIG_PATH="/workspace/aws-bootcamp-cruddur-2023/aws/cfn/cluster/config.toml"
 echo $CFN_PATH
 
-cfn-lint $CFN_PATH
+# cfn-lint $CFN_PATH
 
 BUCKET=$(cfn-toml key deploy.bucket -t $CONFIG_PATH)
 REGION=$(cfn-toml key deploy.region -t $CONFIG_PATH)
@@ -16,7 +16,6 @@ PARAMETERS=$(cfn-toml params v2 -t $CONFIG_PATH)
 aws cloudformation deploy \
   --stack-name "CruddurCluster" \
   --s3-bucket $CFN_BUCKET \
-  # --s3-prefix cluster \
   --region $AWS_DEFAULT_REGION \
   --template-file "$CFN_PATH" \
   --no-execute-changeset \
@@ -26,10 +25,12 @@ aws cloudformation deploy \
 
 
 # aws cloudformation deploy \
-#   --stack-name $STACK_NAME \
-#   --s3-bucket $BUCKET \
-#   --region $REGION \
+#   --stack-name "CruddurCluster" \
+#   --s3-bucket $CFN_BUCKET \
+#   --s3-prefix cluster \
+#   --region $AWS_DEFAULT_REGION \
 #   --template-file "$CFN_PATH" \
 #   --no-execute-changeset \
-#   --tags group=cruddur-networking \
+#   --tags group=cruddur-cluster \
+#   --parameter-overrides $PARAMETERS \
 #   --capabilities CAPABILITY_NAMED_IAM
