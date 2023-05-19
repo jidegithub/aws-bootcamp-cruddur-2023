@@ -1,0 +1,4 @@
+[deploy]
+bucket = 'jidecruddur-cloudformation'
+region = 'us-east-1'
+stack_name = 'CrdSrvBackendFlask'
