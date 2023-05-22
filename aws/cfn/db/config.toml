@@ -1,4 +1,9 @@
 [deploy]
 bucket = 'jidecruddur-cloudformation'
 region = 'us-east-1'
-stack_name = 'CrdSrvBackendFlask'
+stack_name = 'CrdDb'
+
+[parameters]
+NetworkingStack = 'CruddurNet'
+ClusterStack = 'CruddurCluster'
+MasterUsername = 'root'
