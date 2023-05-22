@@ -148,7 +148,7 @@ Resources:
           HealthCheck:
             Command:
               - 'CMD-SHELL'
-              - 'python /flask_app/health-check'
+              - 'python ./flask_app/health-check'
             Interval: 30
             Timeout: 5
             Retries: 3
