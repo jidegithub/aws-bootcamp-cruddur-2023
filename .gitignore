@@ -4,3 +4,5 @@ jwt-authorizer-api/node_modules
 *.env
 .env.local
 session-manager-plugin.deb
+.aws-sam
+build.toml
