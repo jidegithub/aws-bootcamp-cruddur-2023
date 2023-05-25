@@ -54,7 +54,7 @@ Resources:
     # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: cruddur-messaging-stream
+      CodeUri: /workspace/aws-bootcamp-cruddur-2023/aws/cfn/ddb/cruddur-messaging-stream/
       PackageType: Zip
       Handler: lambda_handler
       Runtime: !Ref PythonRuntime
@@ -74,7 +74,7 @@ Resources:
   LambdaLogGroup:
     Type: "AWS::Logs::LogGroup"
     Properties:
-      LogGroupName: "/aws/lambda/cruddur-messaging-stream"
+      LogGroupName: "/aws/lambda/cruddur-messaging-streamII"
       RetentionInDays: 14
   LambdaLogStream:
     Type: "AWS::Logs::LogStream"
