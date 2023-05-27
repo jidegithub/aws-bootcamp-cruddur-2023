@@ -6,3 +6,4 @@ jwt-authorizer-api/node_modules
 session-manager-plugin.deb
 .aws-sam
 build.toml
+tmp/*
