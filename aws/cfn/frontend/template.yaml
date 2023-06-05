@@ -49,8 +49,8 @@ Resources:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName: !Sub ${RootBucketName}.
-      Name: !Sub ${RootBucketName}.
+      HostedZoneName: !Sub ${RootBucketName}.site
+      Name: !Sub ${RootBucketName}.site
       Type: A
       AliasTarget:
         # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-aliastarget.html#cfn-route53-aliastarget-hostedzoneid
@@ -61,8 +61,8 @@ Resources:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName: !Sub ${RootBucketName}.
-      Name: !Sub ${WwwBucketName}.
+      HostedZoneName: !Sub ${RootBucketName}.site
+      Name: !Sub ${WwwBucketName}.site
       Type: A
       AliasTarget:
         DNSName: !GetAtt Distribution.DomainName
