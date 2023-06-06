@@ -11,6 +11,10 @@ tasks:
       pip install cfn-lint
       cargo install cfn-guard
       gem install cfn-toml
+  - name: aws-s3-website-sync
+    init: |
+      cd /workspace
+      gem install aws_s3_website_sync
   - name: aws-cli
     env:
       AWS_CLI_AUTO_PROMPT: on-partial
