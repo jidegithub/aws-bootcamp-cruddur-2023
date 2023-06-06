@@ -7,3 +7,5 @@ session-manager-plugin.deb
 .aws-sam
 build.toml
 tmp/*
+build
+build.zip
