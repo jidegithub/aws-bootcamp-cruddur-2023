@@ -190,11 +190,12 @@ def data_search():
 
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
-def data_activities():
-  user_handle  = 'grahams'
+@CognitoJwtTokenMiddleware
+def data_activities(cognito_user_id):
   message = request.json['message']
   ttl = request.json['ttl']
-  model = CreateActivity.run(message, user_handle, ttl)
+  model = CreateActivity.run(message, cognito_user_id, ttl)
+  print(model, flush=True)
   if model['errors'] is not None:
     return model['errors'], 422
   else:
