@@ -2,3 +2,8 @@
 bucket = 'jidecruddur-cloudformation'
 region = 'us-east-1'
 stack_name = 'CrdSrvBackendFlask'
+
+[parameters]
+EnvFrontendUrl = 'https://jidecruddur.site'
+EnvBackendUrl = 'https://api.jidecruddur.site'
+DDBMessageTable = ''
