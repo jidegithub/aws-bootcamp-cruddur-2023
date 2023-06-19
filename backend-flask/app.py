@@ -192,14 +192,22 @@ def data_search():
 @cross_origin()
 @CognitoJwtTokenMiddleware
 def data_activities(cognito_user_id):
-  message = request.json['message']
-  ttl = request.json['ttl']
-  model = CreateActivity.run(message, cognito_user_id, ttl)
-  print(model, flush=True)
-  if model['errors'] is not None:
-    return model['errors'], 422
-  else:
-    return model['data'], 200
+  message = request.json['message',None]
+  ttl = request.json['ttl',None]
+  try:
+    model = CreateActivity.run(
+      message=message, 
+      cognito_user_id=cognito_user_id, 
+      ttl=ttl
+    )
+    if model['errors'] is not None:
+      return model['errors'], 422
+    else:
+      return model['data'], 200
+  except Exception as e:
+    # unautheticated request
+    app.logger.debug(e)
+    return {}, 401
 
 @app.route("/api/activities/<string:activity_uuid>", methods=['GET'])
 def data_show_activity(activity_uuid):
