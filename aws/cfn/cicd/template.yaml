@@ -16,6 +16,8 @@ Parameters:
     Type: String
   ArtifactBucketName:
     Type: String
+  BuildSpec:
+    Type: String
 Resources:
   Codebuild:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html
