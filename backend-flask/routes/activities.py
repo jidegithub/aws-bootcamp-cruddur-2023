@@ -45,6 +45,7 @@ def load(app):
   @cross_origin()
   @jwt_required()
   def data_activities():
+    print({"cognito user id": g.cognito_user_id}, flush=True)
     message = request.json['message']
     ttl = request.json['ttl']
     model = CreateActivity.run(message, g.cognito_user_id, ttl)
