@@ -1,0 +1,11 @@
+[deploy]
+bucket = 'jidecruddur-cloudformation'
+region = 'us-east-1'
+stack_name = 'CruddurCicd'
+
+[parameters]
+ServiceStack = 'CrdSrvBackendFlask'
+ClusterStack = 'CruddurCluster'
+GitHubBranch = 'prod'
+GithubRepo = 'aws-bootcamp-cruddur-2023'
+ArtifactBucketName = "jidecruddur-codepipeline-artifacts"
