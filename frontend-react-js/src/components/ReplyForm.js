@@ -1,7 +1,7 @@
 import './ReplyForm.css';
 import React from "react";
 import process from 'process';
-import {post} from 'utils/Requests';
+import {post} from '../utils/Request';
 
 import ActivityContent  from 'components/ActivityContent';
 import FormErrors from 'components/FormErrors';
