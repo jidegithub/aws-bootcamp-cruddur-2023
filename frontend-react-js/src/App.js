@@ -31,6 +31,10 @@ const router = createBrowserRouter([
     element: <UserFeedPage />
   },
   {
+    path: "/@:handle/status/:activity_uuid",
+    element: <ActivityShowPage />
+  },
+  {
     path: "/messages",
     element: <MessageGroupsPage />
   },
