@@ -2,6 +2,13 @@ import './ActivityFeed.css';
 import ActivityItem from './ActivityItem';
 
 export default function ActivityFeed(props) {
+
+  if (props.activities.length === 0){
+    <div className='activity_feed_primer'>
+      <span>Nothing to see here yet</span>
+    </div>
+  }
+
   return (
     <div className='activity_feed'>
       <div className='activity_feed_heading'>

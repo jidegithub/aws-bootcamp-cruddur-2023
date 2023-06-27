@@ -13,19 +13,6 @@ export default function RecoverPage() {
   const [errors, setErrors] = React.useState('');
   const [formState, setFormState] = React.useState('send_code');
 
-  const username_onchange = (event) => {
-    setUsername(event.target.value);
-  }
-  const password_onchange = (event) => {
-    setPassword(event.target.value);
-  }
-  const password_again_onchange = (event) => {
-    setPasswordAgain(event.target.value);
-  }
-  const code_onchange = (event) => {
-    setCode(event.target.value);
-  }
-
   const onsubmit_send_code = async (event) => {
     event.preventDefault();
     setErrors('')
@@ -34,7 +21,6 @@ export default function RecoverPage() {
     .catch((err) => setErrors(err.message) );
     return false
   }
-
   const onsubmit_confirm_code = async (event) => {
     event.preventDefault();
     setErrors('')
@@ -46,6 +32,19 @@ export default function RecoverPage() {
       setErrors('Passwords do not match')
     }
     return false
+  }
+
+  const username_onchange = (event) => {
+    setUsername(event.target.value);
+  }
+  const password_onchange = (event) => {
+    setPassword(event.target.value);
+  }
+  const password_again_onchange = (event) => {
+    setPasswordAgain(event.target.value);
+  }
+  const code_onchange = (event) => {
+    setCode(event.target.value);
   }
 
   let el_errors;
