@@ -1,7 +1,7 @@
 import './ProfileForm.css';
 import React from "react";
 import process from 'process';
-import {getAccessToken} from 'lib/CheckAuth';
+import {getAccessToken} from '../utils/CheckAuth';
 import {put} from '../utils/Requests';
 import FormErrors from 'components/FormErrors';
 
