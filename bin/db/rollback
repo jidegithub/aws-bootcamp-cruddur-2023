@@ -10,6 +10,7 @@ import importlib
 current_path = os.path.dirname(os.path.abspath(__file__))
 parent_path = os.path.abspath(os.path.join(current_path, '..', '..','backend-flask'))
 sys.path.append(parent_path)
+# from lib.db import db
 from lib.db_local import db
 
 def get_last_successful_run():
@@ -52,6 +53,4 @@ for migration_file in migration_files:
         mod = importlib.import_module(module_name)
         print('=== rolling back: ',module_name)
         mod.migration.rollback()
-        set_last_successful_run(file_time)
-        
-print(last_migration_file)
+        set_last_successful_run(str(file_time))
