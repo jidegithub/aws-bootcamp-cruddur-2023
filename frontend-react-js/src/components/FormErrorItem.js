@@ -23,6 +23,8 @@ export default function FormErrorItem(props) {
         return "You need to send a message to a valid user"
       case 'user_reciever_handle_blank':
         return "You need to send a message to a valid user"
+      case 'Incorrect username or password.':
+        return "Incorrect username or password"
       // Profile
       case 'display_name_blank':
         return "The display name cannot be blank"
