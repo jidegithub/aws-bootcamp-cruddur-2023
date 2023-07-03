@@ -21,6 +21,7 @@ export default function MessageGroupPage() {
 
   const loadUserShortData = async () => {
     const url = `${process.env.REACT_APP_BACKEND_URL}/api/users/@${params.handle}/short`
+    console.log('check if called with undef', url)
     get(url,{
       auth: true,
       success: function(data){
@@ -48,7 +49,6 @@ export default function MessageGroupPage() {
     loadMessageGroupsData();
     loadUserShortData();
     checkAuth(setUser);
-    console.log('check if called with undef', url)
   }, [])
   return (
     <article>
