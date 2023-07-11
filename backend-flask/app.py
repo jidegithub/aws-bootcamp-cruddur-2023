@@ -22,14 +22,14 @@ from lib.helpers import model_json
 from lib.cors import init_cors
 
 # RollBar Service
-from services.rollbar import init_rollbar, rollbar
+from services.logging.rollbar import init_rollbar, rollbar
 # AWS token verifier
 from middleware.cognito_jwt_token_middleware import jwt_required
 
 # CLOUDWATCH Logs
 from services.logging.logger import setup_logger
 setup_logger()
-logger = logging.getLogger("cruddur-backend-flask")
+logger = logging.getLogger("cruddur")
 
 # load routes -----------
 import routes.general
