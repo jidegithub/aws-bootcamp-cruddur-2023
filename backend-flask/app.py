@@ -52,8 +52,8 @@ if os.getenv("ENABLE_ROLLBAR_LOG") and os.getenv("ENABLE_ROLLBAR_LOG").lower() =
 
 @app.route('/rollbar/test')
 def rollbar_test():
-    rollbar.report_message('Hello World!', 'warning')
-    return "Hello World!" 
+    g.rollbar.report_message('Hello World!', 'warning')
+    return "Hello World!"
 
 # load routes -----------
 routes.general.load(app)
