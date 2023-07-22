@@ -58,9 +58,9 @@ Parameters:
   BackendHealthCheckPath:
     Type: String
     Default: "/api/health-check"
-  BackendHealthCheckPort:
-    Type: String
-    Default: 80
+  # BackendHealthCheckPort:
+  #   Type: String
+  #   Default: 80
   BackendHealthCheckProtocol:
     Type: String
     Default: HTTP
@@ -212,7 +212,7 @@ Resources:
       HealthCheckProtocol: !Ref BackendHealthCheckProtocol
       HealthCheckIntervalSeconds: !Ref BackendHealthCheckIntervalSeconds
       HealthCheckPath: !Ref BackendHealthCheckPath
-      HealthCheckPort: !Ref BackendHealthCheckPort
+      # HealthCheckPort: !Ref BackendHealthCheckPort
       HealthCheckTimeoutSeconds: !Ref BackendHealthCheckTimeoutSeconds
       HealthyThresholdCount: !Ref BackendHealthyThresholdCount
       UnhealthyThresholdCount: !Ref BackendUnhealthyThresholdCount
