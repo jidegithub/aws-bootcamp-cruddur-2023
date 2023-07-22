@@ -46,14 +46,8 @@ init_honeycomb(app)
 init_cors(app)
 
 # RollBar init
-if os.getenv("ENABLE_ROLLBAR_LOG") and os.getenv("ENABLE_ROLLBAR_LOG").lower() == "true":
   with app.app_context():
     g.rollbar = init_rollbar(app)
-
-@app.route('/rollbar/test')
-def rollbar_test():
-    g.rollbar.report_message('Hello World!', 'warning')
-    return "Hello World!"
 
 # load routes -----------
 routes.general.load(app)
