@@ -9,11 +9,11 @@ Parameters:
   NetworkingStack:
     Type: String
     Description: This is our base layer of networking components eg. VPC, Subnets
-    Default: CruddurNet
+    Default: CrdNet
   ClusterStack:
     Type: String
     Description: This is our cluster layer eg. ECS Cluster, ALB
-    Default: CruddurCluster
+    Default: CrdCluster
   ContainerPort:
     Type: Number
     Default: 4567
@@ -154,7 +154,7 @@ Resources:
           HealthCheck:
             Command:
               - 'CMD-SHELL'
-              - 'python ./flask_app/health-check'
+              - 'python /backend-flask/flask_app/health-check'
             Interval: 30
             Timeout: 5
             Retries: 3
