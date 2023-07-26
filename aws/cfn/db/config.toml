@@ -4,6 +4,6 @@ region = 'us-east-1'
 stack_name = 'CrdDb'
 
 [parameters]
-NetworkingStack = 'CruddurNet'
-ClusterStack = 'CruddurCluster'
+NetworkingStack = 'CrdNet'
+ClusterStack = 'CrdCluster'
 MasterUsername = 'root'

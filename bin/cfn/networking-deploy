@@ -14,8 +14,9 @@ REGION=$(cfn-toml key deploy.region -t $CONFIG_PATH)
 STACK_NAME=$(cfn-toml key deploy.stack_name -t $CONFIG_PATH)
 
 aws cloudformation deploy \
-  --stack-name "CruddurNet" \
-  --s3-bucket $CFN_BUCKET \
+  --stack-name $STACK_NAME \
+  --s3-bucket $BUCKET \
+  --s3-prefix networking \
   --region $AWS_DEFAULT_REGION \
   --template-file "$CFN_PATH" \
   --no-execute-changeset \
