@@ -1,4 +1,4 @@
 [deploy]
 bucket = 'jidecruddur-cloudformation'
 region = 'us-east-1'
-stack_name = 'CruddurMachineUser'
+stack_name = 'CrdMachineUser'
